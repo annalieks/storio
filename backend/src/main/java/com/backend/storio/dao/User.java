@@ -1,23 +1,25 @@
 package com.backend.storio.dao;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "user_data")
 public class User {
 
     @Id @GeneratedValue
     @Column(name = "id")
-    private final UUID id;
+    private UUID id;
 
     @Column
-    private final String username;
+    private String username;
 
     @Column
-    private final String password;
+    private String password;
 
 }
