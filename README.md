@@ -1,2 +1,3 @@
-# storio
-Storio - storage for gathering knowledge together.
+# Storio
+### **Storio** - storage for gathering knowledge together.
+
