@@ -83,13 +83,13 @@ CREATE TABLE sponsor
 
 CREATE TABLE submission
 (
-    id             uuid        NOT NULL,
-    user_id        uuid        NOT NULL,
-    assignment_id  uuid        NOT NULL,
-    time_submitted timestamptz,
-    grade          integer    ,
-    submitted      boolean     NOT NULL,
-    text           varchar    ,
+    id            uuid        NOT NULL,
+    user_id       uuid        NOT NULL,
+    assignment_id uuid        NOT NULL,
+    submitted_at  timestamptz,
+    grade         integer    ,
+    submitted     boolean     NOT NULL,
+    text          varchar    ,
     PRIMARY KEY (id)
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE todo
     id      uuid    NOT NULL,
     user_id uuid    NOT NULL,
     text    varchar NOT NULL,
-    is_done boolean NOT NULL,
+    done    boolean NOT NULL,
     PRIMARY KEY (id)
 );
 

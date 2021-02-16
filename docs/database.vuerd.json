@@ -2,8 +2,8 @@
   "canvas": {
     "width": 1700,
     "height": 1150,
-    "scrollTop": 114.66666412353516,
-    "scrollLeft": 0,
+    "scrollTop": 0,
+    "scrollLeft": 1092.6666259765625,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -17,7 +17,7 @@
     },
     "database": "PostgreSQL",
     "databaseName": "storio",
-    "canvasType": "SQL",
+    "canvasType": "ERD",
     "language": "GraphQL",
     "tableCase": "pascalCase",
     "columnCase": "camelCase",
@@ -913,7 +913,7 @@
             "id": "2d2e92ad-1596-9580-a861-00887b7e6658"
           },
           {
-            "name": "time_submitted",
+            "name": "submitted_at",
             "comment": "",
             "dataType": "timestamptz",
             "default": "",
@@ -928,7 +928,7 @@
               "pk": false,
               "fk": false,
               "pfk": false,
-              "widthName": 98,
+              "widthName": 82,
               "widthComment": 60,
               "widthDataType": 79,
               "widthDefault": 60
@@ -1009,7 +1009,7 @@
           "active": false,
           "left": 8.799999999999999,
           "top": 523.8651845245404,
-          "zIndex": 1567,
+          "zIndex": 1595,
           "widthName": 71,
           "widthComment": 60
         },
@@ -1280,7 +1280,7 @@
             "id": "3dffe92a-2689-00bc-6682-7da68764f52a"
           },
           {
-            "name": "is_done",
+            "name": "done",
             "comment": "",
             "dataType": "boolean",
             "default": "",
@@ -1307,7 +1307,7 @@
           "active": false,
           "left": 11.519945507810078,
           "top": 773.5733556355789,
-          "zIndex": 1452,
+          "zIndex": 1597,
           "widthName": 60,
           "widthComment": 60
         },
@@ -1750,7 +1750,7 @@
           "columnIds": [
             "ef9e6198-b015-a8c7-9e5d-e854d2a26579"
           ],
-          "x": 412.8,
+          "x": 405.8,
           "y": 630.1151845245404,
           "direction": "right"
         },
@@ -1911,7 +1911,7 @@
           "columnIds": [
             "2d2e92ad-1596-9580-a861-00887b7e6658"
           ],
-          "x": 210.8,
+          "x": 207.3,
           "y": 523.8651845245404,
           "direction": "top"
         },

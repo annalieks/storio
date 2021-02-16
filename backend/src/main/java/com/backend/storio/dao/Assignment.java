@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -32,5 +33,9 @@ public class Assignment {
 
     @Column
     private String description;
+
+    @OneToMany
+    @JoinColumn(name = "id")
+    private List<Submission> submissions;
 
 }
