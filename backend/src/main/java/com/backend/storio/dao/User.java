@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -12,14 +13,30 @@ import java.util.UUID;
 @Table(name = "user_data")
 public class User {
 
-    @Id @GeneratedValue
-    @Column(name = "id")
+    @Id
+    @GeneratedValue
+    @Column
     private UUID id;
 
     @Column
-    private String username;
+    private String email;
 
     @Column
     private String password;
+
+    @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
+
+    @Column
+    private String avatar;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Course> studentCourses;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Course> teacherCourses;
 
 }

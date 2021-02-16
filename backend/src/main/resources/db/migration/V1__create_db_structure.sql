@@ -1,11 +1,11 @@
 CREATE TABLE assignment
 (
-    id          uuid      NOT NULL,
-    course_id   uuid      NOT NULL,
-    deadline    timestamp,
-    max_grade   integer   NOT NULL,
-    title       varchar   NOT NULL,
-    description varchar  ,
+    id          uuid        NOT NULL,
+    course_id   uuid        NOT NULL,
+    deadline    timestamptz,
+    max_grade   integer     NOT NULL,
+    title       varchar     NOT NULL,
+    description varchar    ,
     PRIMARY KEY (id)
 );
 
@@ -18,24 +18,24 @@ CREATE TABLE certificate
     PRIMARY KEY (id)
 );
 
-CREATE TABLE comments
+CREATE TABLE comment
 (
-    id         uuid      NOT NULL,
-    user_id    uuid      NOT NULL,
-    post_id    uuid      NOT NULL,
-    text       varchar   NOT NULL,
-    created_at timestamp NOT NULL,
+    id         uuid        NOT NULL,
+    user_id    uuid        NOT NULL,
+    post_id    uuid        NOT NULL,
+    text       varchar     NOT NULL,
+    created_at timestamptz NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE course
 (
-    id          uuid      NOT NULL,
-    creator_id  uuid      NOT NULL,
-    name        varchar   NOT NULL,
-    description varchar  ,
-    is_finished boolean   NOT NULL,
-    created_at  timestamp NOT NULL,
+    id          uuid        NOT NULL,
+    creator_id  uuid        NOT NULL,
+    name        varchar     NOT NULL,
+    description varchar    ,
+    finished_at timestamptz,
+    created_at  timestamptz NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -65,11 +65,11 @@ CREATE TABLE material
 
 CREATE TABLE post
 (
-    id         uuid      NOT NULL,
-    user_id    uuid      NOT NULL,
-    course_id  uuid      NOT NULL,
-    text       varchar   NOT NULL,
-    created_at timestamp NOT NULL,
+    id         uuid        NOT NULL,
+    user_id    uuid        NOT NULL,
+    course_id  uuid        NOT NULL,
+    text       varchar     NOT NULL,
+    created_at timestamptz NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -83,21 +83,20 @@ CREATE TABLE sponsor
 
 CREATE TABLE submission
 (
-    id             uuid      NOT NULL,
-    user_id        uuid      NOT NULL,
-    assignment_id  uuid      NOT NULL,
-    time_submitted timestamp,
-    grade          integer  ,
-    is_submitted   boolean   NOT NULL,
-    text           varchar  ,
+    id             uuid        NOT NULL,
+    user_id        uuid        NOT NULL,
+    assignment_id  uuid        NOT NULL,
+    time_submitted timestamptz,
+    grade          integer    ,
+    submitted      boolean     NOT NULL,
+    text           varchar    ,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE tag
 (
-    id        uuid    NOT NULL,
-    course_id uuid    NOT NULL,
-    name      varchar NOT NULL,
+    id   uuid    NOT NULL,
+    name varchar NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -123,7 +122,8 @@ CREATE TABLE user_data
     id         uuid    NOT NULL,
     email      varchar NOT NULL,
     password   varchar NOT NULL,
-    name       varchar NOT NULL,
+    first_name varchar NOT NULL,
+    last_name  varchar NOT NULL,
     avatar_url varchar,
     PRIMARY KEY (id)
 );
@@ -163,18 +163,13 @@ ALTER TABLE todo
         FOREIGN KEY (user_id)
             REFERENCES user_data (id);
 
-ALTER TABLE assignment
-    ADD CONSTRAINT FK_user_data_TO_assignment
-        FOREIGN KEY (course_id)
-            REFERENCES user_data (id);
-
-ALTER TABLE comments
-    ADD CONSTRAINT FK_post_TO_comments
+ALTER TABLE comment
+    ADD CONSTRAINT FK_post_TO_comment
         FOREIGN KEY (user_id)
             REFERENCES post (id);
 
-ALTER TABLE comments
-    ADD CONSTRAINT FK_user_data_TO_comments
+ALTER TABLE comment
+    ADD CONSTRAINT FK_user_data_TO_comment
         FOREIGN KEY (post_id)
             REFERENCES user_data (id);
 
@@ -217,3 +212,11 @@ ALTER TABLE course_sponsor
     ADD CONSTRAINT FK_course_TO_course_sponsor
         FOREIGN KEY (course_id)
             REFERENCES course (id);
+
+ALTER TABLE assignment
+    ADD CONSTRAINT FK_course_TO_assignment
+        FOREIGN KEY (course_id)
+            REFERENCES course (id);
+
+
+      
