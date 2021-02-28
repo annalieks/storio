@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class Course {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User creator;
 
     @Column
@@ -35,20 +36,28 @@ public class Course {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "user_data",
-            joinColumns = {@JoinColumn(name = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "id")})
+    @ManyToMany(fetch = FetchType.LAZY)
     List<User> students;
 
-    @ManyToMany(mappedBy = "courses")
+    @ManyToMany(mappedBy = "courses", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tag> tags;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Assignment> teacherCourses;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private List<Certificate> certificates;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private List<Material> materials;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private List<Post> posts;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Sponsor> sponsors;
 
 }
 

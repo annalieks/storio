@@ -23,8 +23,8 @@ public class ToDo {
     @Column
     private boolean done;
 
-    @ManyToOne
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     private User author;
 
 }

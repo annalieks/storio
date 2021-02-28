@@ -19,7 +19,7 @@ public class Assignment {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     @Column
@@ -34,8 +34,7 @@ public class Assignment {
     @Column
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY)
     private List<Submission> submissions;
 
 }

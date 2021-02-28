@@ -21,11 +21,7 @@ public class Tag {
     @Column
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "course",
-            joinColumns = {@JoinColumn(name = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "id")})
+    @ManyToMany(fetch = FetchType.LAZY)
     List<Course> courses;
 
 }

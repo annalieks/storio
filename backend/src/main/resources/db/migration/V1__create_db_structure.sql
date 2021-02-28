@@ -1,222 +1,201 @@
-CREATE TABLE assignment
+create table assignment
 (
-    id          uuid        NOT NULL,
-    course_id   uuid        NOT NULL,
-    deadline    timestamptz,
-    max_grade   integer     NOT NULL,
-    title       varchar     NOT NULL,
-    description varchar    ,
-    PRIMARY KEY (id)
+    id          uuid not null,
+    deadline    timestamp,
+    description varchar(255),
+    max_grade   int4,
+    title       varchar(255),
+    grade       int4,
+    course_id   uuid,
+    user_id     uuid,
+    primary key (id)
 );
 
-CREATE TABLE certificate
+create table comment
 (
-    id        uuid    NOT NULL,
-    user_id   uuid    NOT NULL,
-    course_id uuid    NOT NULL,
-    grade     integer NOT NULL,
-    PRIMARY KEY (id)
+    id         uuid not null,
+    created_at timestamp,
+    text       varchar(255),
+    user_id    uuid,
+    post_id    uuid,
+    primary key (id)
 );
 
-CREATE TABLE comment
+create table course
 (
-    id         uuid        NOT NULL,
-    user_id    uuid        NOT NULL,
-    post_id    uuid        NOT NULL,
-    text       varchar     NOT NULL,
-    created_at timestamptz NOT NULL,
-    PRIMARY KEY (id)
+    id          uuid not null,
+    created_at  timestamp,
+    description varchar(255),
+    finished_at timestamp,
+    name        varchar(255),
+    user_id     uuid,
+    primary key (id)
 );
 
-CREATE TABLE course
+create table course_sponsors
 (
-    id          uuid        NOT NULL,
-    creator_id  uuid        NOT NULL,
-    name        varchar     NOT NULL,
-    description varchar    ,
-    finished_at timestamptz,
-    created_at  timestamptz NOT NULL,
-    PRIMARY KEY (id)
+    courses_id  uuid not null,
+    sponsors_id uuid not null
 );
 
-CREATE TABLE course_sponsor
+create table course_students
 (
-    id         uuid NOT NULL,
-    course_id  uuid NOT NULL,
-    sponsor_id uuid NOT NULL,
-    PRIMARY KEY (id)
+    student_courses_id uuid not null,
+    students_id        uuid not null
 );
 
-CREATE TABLE course_tag
+create table material
 (
-    id        uuid NOT NULL,
-    course_id uuid NOT NULL,
-    tag_id    uuid NOT NULL,
-    PRIMARY KEY (id)
+    id        uuid not null,
+    content   varchar(255),
+    course_id uuid,
+    primary key (id)
 );
 
-CREATE TABLE material
+create table post
 (
-    id        uuid    NOT NULL,
-    course_id uuid    NOT NULL,
-    content   varchar NOT NULL,
-    PRIMARY KEY (id)
+    id         uuid not null,
+    created_at timestamp,
+    text       varchar(255),
+    user_id    uuid,
+    course_id  uuid,
+    primary key (id)
 );
 
-CREATE TABLE post
+create table sponsor
 (
-    id         uuid        NOT NULL,
-    user_id    uuid        NOT NULL,
-    course_id  uuid        NOT NULL,
-    text       varchar     NOT NULL,
-    created_at timestamptz NOT NULL,
-    PRIMARY KEY (id)
+    id          uuid not null,
+    description varchar(255),
+    name        varchar(255),
+    primary key (id)
 );
 
-CREATE TABLE sponsor
+create table submission
 (
-    id          uuid    NOT NULL,
-    name        varchar NOT NULL,
-    description varchar,
-    PRIMARY KEY (id)
+    id            uuid not null,
+    grade         int4,
+    submitted     boolean,
+    submitted_at  timestamp,
+    text          varchar(255),
+    assignment_id uuid,
+    author_id     uuid,
+    primary key (id)
 );
 
-CREATE TABLE submission
+create table tag
 (
-    id            uuid        NOT NULL,
-    user_id       uuid        NOT NULL,
-    assignment_id uuid        NOT NULL,
-    submitted_at  timestamptz,
-    grade         integer    ,
-    submitted     boolean     NOT NULL,
-    text          varchar    ,
-    PRIMARY KEY (id)
+    id   uuid not null,
+    name varchar(255),
+    primary key (id)
 );
 
-CREATE TABLE tag
+create table tag_courses
 (
-    id   uuid    NOT NULL,
-    name varchar NOT NULL,
-    PRIMARY KEY (id)
+    tags_id    uuid not null,
+    courses_id uuid not null
 );
 
-CREATE TABLE todo
+create table to_do
 (
-    id      uuid    NOT NULL,
-    user_id uuid    NOT NULL,
-    text    varchar NOT NULL,
-    done    boolean NOT NULL,
-    PRIMARY KEY (id)
+    id        uuid not null,
+    done      boolean,
+    text      varchar(255),
+    author_id uuid,
+    primary key (id)
 );
 
-CREATE TABLE user_course
+create table user_data
 (
-    id        uuid NOT NULL,
-    user_id   uuid NOT NULL,
-    course_id uuid NOT NULL,
-    PRIMARY KEY (id)
+    id         uuid not null,
+    avatar     varchar(255),
+    email      varchar(255),
+    first_name varchar(255),
+    last_name  varchar(255),
+    password   varchar(255),
+    primary key (id)
 );
 
-CREATE TABLE user_data
-(
-    id         uuid    NOT NULL,
-    email      varchar NOT NULL,
-    password   varchar NOT NULL,
-    first_name varchar NOT NULL,
-    last_name  varchar NOT NULL,
-    avatar_url varchar,
-    PRIMARY KEY (id)
-);
+alter table if exists assignment
+    add constraint FKrop26uwnbkstbtfha3ormxp85
+        foreign key (course_id)
+            references course;
 
-ALTER TABLE user_course
-    ADD CONSTRAINT FK_user_data_TO_user_course
-        FOREIGN KEY (user_id)
-            REFERENCES user_data (id);
+alter table if exists assignment
+    add constraint FKhdb8hnmnw3g2kixd03pfmnosx
+        foreign key (user_id)
+            references user_data;
 
-ALTER TABLE user_course
-    ADD CONSTRAINT FK_course_TO_user_course
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
+alter table if exists comment
+    add constraint FKabstdhod9m73h4umby2n9euh1
+        foreign key (user_id)
+            references user_data;
 
-ALTER TABLE post
-    ADD CONSTRAINT FK_user_data_TO_post
-        FOREIGN KEY (user_id)
-            REFERENCES user_data (id);
+alter table if exists comment
+    add constraint FKs1slvnkuemjsq2kj4h3vhx7i1
+        foreign key (post_id)
+            references post;
 
-ALTER TABLE post
-    ADD CONSTRAINT FK_course_TO_post
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
+alter table if exists course
+    add constraint FKspopjlbe8aq8ydq61k8gofshi
+        foreign key (user_id)
+            references user_data;
 
-ALTER TABLE submission
-    ADD CONSTRAINT FK_user_data_TO_submission
-        FOREIGN KEY (user_id)
-            REFERENCES user_data (id);
+alter table if exists course_sponsors
+    add constraint FKf2r0bkkk8kpjuvu0ixva72fdr
+        foreign key (sponsors_id)
+            references sponsor;
 
-ALTER TABLE material
-    ADD CONSTRAINT FK_course_TO_material
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
+alter table if exists course_sponsors
+    add constraint FKl3m2w5i05r5r5slxnahvayva2
+        foreign key (courses_id)
+            references course;
 
-ALTER TABLE todo
-    ADD CONSTRAINT FK_user_data_TO_todo
-        FOREIGN KEY (user_id)
-            REFERENCES user_data (id);
+alter table if exists course_students
+    add constraint FKbtg9c1f3qa2ow7l52nnfn2r1s
+        foreign key (students_id)
+            references user_data;
 
-ALTER TABLE comment
-    ADD CONSTRAINT FK_post_TO_comment
-        FOREIGN KEY (user_id)
-            REFERENCES post (id);
+alter table if exists course_students
+    add constraint FKnu6xlbry29g8xwjy5ljfx79xp
+        foreign key (student_courses_id)
+            references course;
 
-ALTER TABLE comment
-    ADD CONSTRAINT FK_user_data_TO_comment
-        FOREIGN KEY (post_id)
-            REFERENCES user_data (id);
+alter table if exists material
+    add constraint FKgwu2j6q988nwuqpo6p32uflmv
+        foreign key (course_id)
+            references course;
 
-ALTER TABLE certificate
-    ADD CONSTRAINT FK_user_data_TO_certificate
-        FOREIGN KEY (user_id)
-            REFERENCES user_data (id);
+alter table if exists post
+    add constraint FK6ljfcy74hilk7u5yf0hp4rlci
+        foreign key (user_id)
+            references user_data;
 
-ALTER TABLE certificate
-    ADD CONSTRAINT FK_course_TO_certificate
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
+alter table if exists post
+    add constraint FKe7p5x3rqf74eb00ynw9x85l5r
+        foreign key (course_id)
+            references course;
 
-ALTER TABLE submission
-    ADD CONSTRAINT FK_assignment_TO_submission
-        FOREIGN KEY (assignment_id)
-            REFERENCES assignment (id);
+alter table if exists submission
+    add constraint FK3q8643roa73llngo64dvpvtxt
+        foreign key (assignment_id)
+            references assignment;
 
-ALTER TABLE course
-    ADD CONSTRAINT FK_user_data_TO_course
-        FOREIGN KEY (creator_id)
-            REFERENCES user_data (id);
+alter table if exists submission
+    add constraint FKj5tu5alb8wcy9042nkkq8fws2
+        foreign key (author_id)
+            references user_data;
 
-ALTER TABLE course_tag
-    ADD CONSTRAINT FK_course_TO_course_tag
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
+alter table if exists tag_courses
+    add constraint FKbsb69mxgm0hb6wmela8wjbt23
+        foreign key (courses_id)
+            references course;
 
-ALTER TABLE course_tag
-    ADD CONSTRAINT FK_tag_TO_course_tag
-        FOREIGN KEY (tag_id)
-            REFERENCES tag (id);
+alter table if exists tag_courses
+    add constraint FKryrq5cdhofq43j6bemsi1vxf7
+        foreign key (tags_id)
+            references tag;
 
-ALTER TABLE course_sponsor
-    ADD CONSTRAINT FK_sponsor_TO_course_sponsor
-        FOREIGN KEY (sponsor_id)
-            REFERENCES sponsor (id);
-
-ALTER TABLE course_sponsor
-    ADD CONSTRAINT FK_course_TO_course_sponsor
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
-
-ALTER TABLE assignment
-    ADD CONSTRAINT FK_course_TO_assignment
-        FOREIGN KEY (course_id)
-            REFERENCES course (id);
-
-
-      
+alter table if exists to_do
+    add constraint FKbq1bdbi6ly30himntf4ophuc5
+        foreign key (author_id)
+            references user_data

@@ -18,8 +18,8 @@ public class Submission {
     @Column(name = "id")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     private User author;
 
     @Column
@@ -33,5 +33,9 @@ public class Submission {
 
     @Column
     private String text;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignment_id")
+    private Assignment assignment;
 
 }

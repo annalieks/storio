@@ -33,10 +33,13 @@ public class User {
     @Column
     private String avatar;
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private List<Course> studentCourses;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<Course> teacherCourses;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Certificate> certificates;
 
 }
