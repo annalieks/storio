@@ -1,6 +1,7 @@
 package com.backend.storio.service;
 
 import com.backend.storio.dto.CourseCreateDto;
+import com.backend.storio.exception.DuplicateEntityException;
 import com.backend.storio.exception.EntityNotFoundException;
 import com.backend.storio.mapper.CourseMapper;
 import com.backend.storio.repository.CourseRepository;
@@ -41,17 +42,27 @@ public class CourseService {
      */
     public void createCourse(final CourseCreateDto courseDto) {
         var course = CourseMapper.MAPPER.courseCreateDtoToCourse(courseDto);
-        var user = userRepository.findUserById(courseDto.getCreatorId());
-
+        var user = userRepository.findUserById(courseDto.getUserId());
         if (user.isEmpty()) {
             throw new EntityNotFoundException("No creator with such user id was found");
         }
 
+        var teacherCourses = user.get().getTeacherCourses();
+        boolean duplicateExists = teacherCourses.stream().anyMatch(c -> c.getName().equals(courseDto.getName()));
+        if (duplicateExists) {
+            throw new DuplicateEntityException("Course with such name already exists");
+        }
+
+        teacherCourses.add(course);
         var tags = tagRepository.findAllByIdIn(courseDto.getTags());
         var sponsors = sponsorRepository.findAllByIdIn(courseDto.getSponsors());
         course.setTags(tags);
         course.setSponsors(sponsors);
+        user.get().setTeacherCourses(teacherCourses);
+        course.setCreator(user.get());
+
         courseRepository.save(course);
+        userRepository.save(user.get());
     }
 
 }

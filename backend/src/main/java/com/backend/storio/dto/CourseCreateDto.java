@@ -12,7 +12,7 @@ import java.util.UUID;
 public class CourseCreateDto {
 
     @NotNull
-    private final UUID creatorId;
+    private final UUID userId;
 
     @NotNull
     private final String name;

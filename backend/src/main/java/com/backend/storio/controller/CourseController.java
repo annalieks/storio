@@ -3,9 +3,7 @@ package com.backend.storio.controller;
 import com.backend.storio.dto.CourseCreateDto;
 import com.backend.storio.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/course")
@@ -18,8 +16,8 @@ public final class CourseController {
         this.courseService = courseService;
     }
 
-    @PutMapping("/create")
-    public void createCourse(CourseCreateDto courseDto) {
+    @PostMapping("/create")
+    public void createCourse(@RequestBody CourseCreateDto courseDto) {
         courseService.createCourse(courseDto);
     }
 

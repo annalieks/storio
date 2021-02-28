@@ -24,4 +24,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(DuplicateEntityException.class)
+    private ResponseEntity<Object> handleDuplicateEntity(final DuplicateEntityException e) {
+        return ResponseEntity.status(400).body(
+                MessageFormat.format("Duplicate entity: {0}", e.getMessage())
+        );
+    }
+
 }
