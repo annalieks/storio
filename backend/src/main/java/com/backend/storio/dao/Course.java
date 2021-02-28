@@ -45,7 +45,7 @@ public class Course {
     private List<Tag> tags;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    private List<Assignment> teacherCourses;
+    private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Certificate> certificates;
