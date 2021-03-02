@@ -34,7 +34,7 @@ public class Assignment {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Submission> submissions;
 
 }
