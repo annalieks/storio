@@ -1,0 +1,28 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsConfigRootDir": "."
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "rules": {
+    "no-console": "warn",
+    "no-eval": "error",
+    "import/first": "error",
+    "import/extension": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off"
+  }
+}
