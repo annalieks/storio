@@ -1,0 +1,50 @@
+@import "src/styles/variables"
+
+.auth_background
+  background-repeat: no-repeat
+  background-position: center
+  background-size: cover
+  filter: blur(8px)
+
+.auth_container
+  position: fixed
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: row
+  justify-content: center
+  align-items: center
+
+.auth_form
+  z-index: 3
+  display: grid
+  grid-gap: 0.5rem
+  flex-direction: column
+  justify-items: center
+  align-content: center
+  background-color: $white-color
+  width: 15rem
+  padding: 3rem 4rem 3rem 4rem
+
+.auth_header
+  color: black
+  font-weight: 700
+  text-align: center
+  font-size: 1.5em
+  margin-bottom: 0.7rem
+
+.auth_button
+  outline: none
+  border: none
+  cursor: pointer
+  background-color: $blue-color
+  padding: 0.7rem 2rem 0.7rem 2rem
+  color: $white-color
+  font-family: 'Montserrat', sans-serif
+  margin-top: 1rem
+  &:hover
+    background-color: black
+    transition: 0.3s
+
+.auth_text
+  width: 100% !important
