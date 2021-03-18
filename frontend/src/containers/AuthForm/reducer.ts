@@ -18,14 +18,12 @@ const userData = (state = initialState, action: Routine<any>) => {
       };
     }
     case loginRoutine.FAILURE: {
-      console.log('Login failure');
       return {
         ...state,
         isAuthorized: false
       };
     }
     case signupRoutine.FAILURE: {
-      console.log('Login failure');
       return {
         ...state,
         isAuthorized: false
