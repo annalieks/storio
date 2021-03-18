@@ -6,7 +6,7 @@ const c = {
   'description': 'Hey! This is Mathematics for everyone!',
 }
 
-export const CoursePage: React.FC = () => (
+const CoursePage: React.FC = () => (
   <div className={styles.course_container}>
     <div className={styles.course_header}>
       <div className={styles.course_name}>
@@ -18,3 +18,5 @@ export const CoursePage: React.FC = () => (
     </div>
   </div>
 );
+
+export default CoursePage;
