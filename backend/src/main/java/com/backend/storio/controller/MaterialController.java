@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/material")
-public class MaterialController {
+public final class MaterialController {
 }

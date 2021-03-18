@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './styles.module.sass';
 import { Footer } from '@components/Footer';
 
-export const LandingPage: React.FC = () => {
+const LandingPage: React.FC = () => {
   return (
     <div className={styles.main_container}>
       <div className={styles.intro_container}>
@@ -26,3 +26,5 @@ export const LandingPage: React.FC = () => {
     </div>
   );
 };
+
+export default LandingPage;
