@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/sponsor")
-public class SponsorController {
+public final class SponsorController {
 }

@@ -1,5 +1,7 @@
 package com.backend.storio.service;
 
+import com.backend.storio.dto.AuthUserDto;
+import com.backend.storio.dto.LoggedInUserDto;
 import com.backend.storio.dto.UserLoginDto;
 import com.backend.storio.dto.UserRegisterDto;
 import com.backend.storio.exception.CredentialsException;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +23,20 @@ public final class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final TokenService tokenService;
+
     @Autowired
     public AuthService(final PasswordEncoder passwordEncoder,
                        final UserService userService,
-                       final AuthenticationManager authenticationManager) {
+                       final AuthenticationManager authenticationManager,
+                       final TokenService tokenService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
     }
 
-    public boolean register(final UserRegisterDto userRegisterDto) {
+    public LoggedInUserDto register(final UserRegisterDto userRegisterDto) {
         var existingUser = userService.findByEmail(userRegisterDto.getEmail());
         if (existingUser.isPresent()) {
             throw new CredentialsException("User with such email already exists");
@@ -37,12 +44,14 @@ public final class AuthService {
         var user = UserMapper.MAPPER.userRegisterDtoToUser(userRegisterDto);
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         userService.createUser(user);
-        return true;
+        var loginDto = new UserLoginDto(userRegisterDto.getEmail(), userRegisterDto.getPassword());
+        return login(loginDto);
     }
 
-    public boolean login(final UserLoginDto userLoginDto) {
+    public LoggedInUserDto login(final UserLoginDto userLoginDto) {
+        final Authentication authentication;
         try {
-            authenticationManager.authenticate(
+            authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userLoginDto.getEmail(),
                             userLoginDto.getPassword())
@@ -50,7 +59,10 @@ public final class AuthService {
         } catch (BadCredentialsException e) {
             throw new CredentialsException("Could not login");
         }
-        return true;
+        var currentUser = (AuthUserDto) authentication.getPrincipal();
+        final var userDetails = userService.getUserById(currentUser.getId());
+        final String jwt = tokenService.generateToken(currentUser);
+        return new LoggedInUserDto(jwt, userDetails);
     }
 
 }

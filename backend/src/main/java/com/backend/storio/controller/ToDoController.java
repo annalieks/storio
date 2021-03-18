@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/todo")
-public class ToDoController {
+public final class ToDoController {
 }

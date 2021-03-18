@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/submission")
-public class SubmissionController {
+public final class SubmissionController {
 }
