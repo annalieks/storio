@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
 const PrivateRoute: React.FC<{
   component: React.FC;
@@ -12,7 +12,9 @@ const PrivateRoute: React.FC<{
   // TODO: Redux state
   const condition = true;
 
-  return condition ? (<Route {...rest} component={component}/>) :
-    (<Redirect to="/login"/>);
+  return condition
+    ? (<Route {...rest} component={component}/>)
+    : (<Redirect to="/login"/>);
 };
+
 export default PrivateRoute;

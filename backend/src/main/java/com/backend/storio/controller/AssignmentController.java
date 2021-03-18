@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/assignment")
-public class AssignmentController {
+public final class AssignmentController {
 }

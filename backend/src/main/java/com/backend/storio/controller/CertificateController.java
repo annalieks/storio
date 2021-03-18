@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/certificate")
-public class CertificateController {
+public final class CertificateController {
 }

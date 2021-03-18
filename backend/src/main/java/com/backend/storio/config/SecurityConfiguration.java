@@ -12,6 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -19,9 +23,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
 
+    private final JwtRequestFilter jwtRequestFilter;
+
     @Autowired
-    public SecurityConfiguration(final UserService userService) {
+    public SecurityConfiguration(final UserService userService,
+                                 final JwtRequestFilter jwtRequestFilter) {
         this.userService = userService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     /**
@@ -33,11 +41,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**")
+                .antMatchers(new String[]{"/", "/auth/**"})
                 .permitAll()
                 .anyRequest().authenticated().and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+
+    /**
+     * Enable global CORS support
+     */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 
     /**
