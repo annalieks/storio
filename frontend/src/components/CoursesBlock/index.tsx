@@ -1,5 +1,6 @@
 import React from 'react';
 import { CoursePreview } from '@models/courseData';
+import { Link } from 'react-router-dom';
 import styles from './styles.module.sass';
 import CourseCard from '@components/CourseCard';
 
@@ -18,7 +19,7 @@ const CoursesBlock: React.FC<ICoursesBlockProps> = ({
       <div className={styles.header_underline}/>
     </div>
     <div className={styles.courses_block}>
-      {courses.map(c => <CourseCard course={c}/>)}
+      {courses.map(c => (<Link to={`course/${c.id}`}><CourseCard course={c}/></Link>))}
     </div>
   </div>
 );
