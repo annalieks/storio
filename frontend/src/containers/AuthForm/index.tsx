@@ -45,7 +45,7 @@ const AuthForm: React.FC<IAuthFormProps> = ({
     };
     return (
       isAuthorized
-        ? <Redirect to="/"/>
+        ? <Redirect to="/home"/>
         : <>
           <div
             style={{ backgroundImage: `url(${background})` }}

@@ -1,24 +1,22 @@
 import React from 'react';
+import ReduxToastr from 'react-redux-toastr';
 import { Provider } from 'react-redux';
 import { store } from '@root/store';
-import LandingPage from '@containers/LandingPage';
-import { Header } from '@components/Header';
-import { Router, Switch, Route } from 'react-router-dom';
-import { history } from '@helpers/history.helper';
-import AuthForm from '@containers/AuthForm';
-import CoursePage from '@containers/CoursePage';
+import AppRouter from '@containers/AppRouter'
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 
 const App: React.FC = () => (
   <Provider store={store}>
-    <Router history={history}>
-      <Header isAuthorized={false}/>
-      <Switch>
-        <Route exact path="/" component={LandingPage}/>
-        <Route exact path="/login" component={AuthForm}/>
-        <Route exact path="/signup" component={() => <AuthForm register={true}/>}/>
-        <Route exact path="/course/:courseId" component={CoursePage}/>
-      </Switch>
-    </Router>
+    <ReduxToastr
+      timeOut={2000}
+      newestOnTop={false}
+      preventDuplicates
+      position="top-left"
+      transitionIn="fadeIn"
+      transitionOut="fadeOut"
+      progressBar
+      closeOnToastrClick/>
+    <AppRouter />
   </Provider>
 );
 
