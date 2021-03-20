@@ -1,20 +1,25 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const PrivateRoute: React.FC<{
+interface IPrivateRouteProps {
+  isAuthorized: boolean;
   component: React.FC;
   rest: never;
-}> = ({
+}
+
+const PrivateRoute: React.FC<IPrivateRouteProps> = ({
+  isAuthorized,
   component,
   ...rest
 }) => {
-
-  // TODO: Redux state
-  const condition = true;
-
-  return condition
+  return isAuthorized
     ? (<Route {...rest} component={component}/>)
     : (<Redirect to="/login"/>);
 };
 
-export default PrivateRoute;
+const mapStateToProps = (state: any) => ({
+  isAuthorized: state.auth.isAuthorized
+});
+
+export default connect(mapStateToProps)(PrivateRoute);

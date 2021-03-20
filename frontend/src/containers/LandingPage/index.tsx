@@ -22,7 +22,7 @@ const LandingPage: React.FC = () => {
           <p className={styles.quote_author}>— Josh Waitzkin</p>
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 };

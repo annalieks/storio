@@ -1,9 +1,10 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import styles from './styles.module.sass';
 import { TextField } from '@material-ui/core';
 import signupImage from '@assets/signup.jpg';
 import loginImage from '@assets/login.jpg';
 import { connect } from 'react-redux';
+import { store} from '@root/store';
 import { loginRoutine, signupRoutine } from '@root/routines/userRoutines';
 import { LoginData, RegisterData } from '@models/userData';
 import { Redirect } from 'react-router-dom';
@@ -25,7 +26,6 @@ const AuthForm: React.FC<IAuthFormProps> = ({
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
-
     const background = register ? signupImage : loginImage;
     const handleSubmit = (e: MouseEvent) => {
       e.preventDefault();

@@ -34,7 +34,7 @@ create table course
 
 create table course_sponsors
 (
-    courses_id  uuid not null,
+    course_id   uuid not null,
     sponsors_id uuid not null
 );
 
@@ -42,6 +42,12 @@ create table course_students
 (
     student_courses_id uuid not null,
     students_id        uuid not null
+);
+
+create table course_tags
+(
+    course_id uuid not null,
+    tags_id   uuid not null
 );
 
 create table material
@@ -89,12 +95,6 @@ create table tag
     primary key (id)
 );
 
-create table tag_courses
-(
-    tags_id    uuid not null,
-    courses_id uuid not null
-);
-
 create table to_do
 (
     id        uuid not null,
@@ -114,6 +114,18 @@ create table user_data
     password   varchar(255),
     primary key (id)
 );
+
+alter table if exists course_sponsors
+    drop constraint if exists UK_4xtpob5xs0l5anvppl870dpcq;
+
+alter table if exists course_sponsors
+    add constraint UK_4xtpob5xs0l5anvppl870dpcq unique (sponsors_id);
+
+alter table if exists course_tags
+    drop constraint if exists UK_ekpr3lu8hby1b6uyjymon5cl9;
+
+alter table if exists course_tags
+    add constraint UK_ekpr3lu8hby1b6uyjymon5cl9 unique (tags_id);
 
 alter table if exists assignment
     add constraint FKrop26uwnbkstbtfha3ormxp85
@@ -146,8 +158,8 @@ alter table if exists course_sponsors
             references sponsor;
 
 alter table if exists course_sponsors
-    add constraint FKl3m2w5i05r5r5slxnahvayva2
-        foreign key (courses_id)
+    add constraint FK3s2yub3rdtcipuj31u2q3sagh
+        foreign key (course_id)
             references course;
 
 alter table if exists course_students
@@ -158,6 +170,16 @@ alter table if exists course_students
 alter table if exists course_students
     add constraint FKnu6xlbry29g8xwjy5ljfx79xp
         foreign key (student_courses_id)
+            references course;
+
+alter table if exists course_tags
+    add constraint FKm0pitkcwp10i5wq9ylikvjimi
+        foreign key (tags_id)
+            references tag;
+
+alter table if exists course_tags
+    add constraint FK63ixc2ni7oipjtimftl4q5o01
+        foreign key (course_id)
             references course;
 
 alter table if exists material
@@ -184,16 +206,6 @@ alter table if exists submission
     add constraint FKj5tu5alb8wcy9042nkkq8fws2
         foreign key (author_id)
             references user_data;
-
-alter table if exists tag_courses
-    add constraint FKbsb69mxgm0hb6wmela8wjbt23
-        foreign key (courses_id)
-            references course;
-
-alter table if exists tag_courses
-    add constraint FKryrq5cdhofq43j6bemsi1vxf7
-        foreign key (tags_id)
-            references tag;
 
 alter table if exists to_do
     add constraint FKbq1bdbi6ly30himntf4ophuc5

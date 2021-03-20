@@ -13,9 +13,16 @@ const userData = (state = initialState, action: Routine<any>) => {
   switch (action.type) {
     case fetchUserInfoRoutine.SUCCESS: {
       return {
+        ...state,
         ...action.payload,
         isAuthorized: true
       };
+    }
+    case 'AUTHENTICATION:CHANGE': {
+      return {
+        ...state,
+        isAuthorized: action.payload,
+      }
     }
     case loginRoutine.FAILURE: {
       return {
