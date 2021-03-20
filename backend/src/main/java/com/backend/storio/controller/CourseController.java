@@ -1,9 +1,13 @@
 package com.backend.storio.controller;
 
 import com.backend.storio.dto.CourseCreateDto;
+import com.backend.storio.dto.CoursePreviewDto;
 import com.backend.storio.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/course")

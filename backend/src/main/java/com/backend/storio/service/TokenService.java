@@ -26,6 +26,12 @@ public class TokenService {
     @Value(value = "${auth0.secret-key}")
     private String SECRET_KEY;
 
+    static public UUID getUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var currentUserId = (String) auth.getPrincipal();
+        return UUID.fromString(currentUserId);
+    }
+
     public String extractUserid(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -38,6 +44,7 @@ public class TokenService {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
@@ -62,9 +69,4 @@ public class TokenService {
                 .compact();
     }
 
-    static public UUID getUserId(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        var currentUserId = (String)auth.getPrincipal();
-        return  UUID.fromString(currentUserId);
-    }
 }

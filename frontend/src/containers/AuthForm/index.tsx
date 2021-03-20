@@ -4,7 +4,7 @@ import { TextField } from '@material-ui/core';
 import signupImage from '@assets/signup.jpg';
 import loginImage from '@assets/login.jpg';
 import { connect } from 'react-redux';
-import { loginRoutine, signupRoutine } from '@root/routines/userRoutines';
+import { loginRoutine, signupRoutine } from '@routines/userRoutines';
 import { LoginData, RegisterData } from '@models/userData';
 import { Redirect } from 'react-router-dom';
 

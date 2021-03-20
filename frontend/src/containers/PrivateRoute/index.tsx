@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 interface IPrivateRouteProps {
   isAuthorized: boolean;
   component: React.FC;
-  rest: never;
 }
 
 const PrivateRoute: React.FC<IPrivateRouteProps> = ({

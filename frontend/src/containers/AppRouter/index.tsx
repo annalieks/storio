@@ -6,20 +6,20 @@ import LandingPage from '@containers/LandingPage';
 import AuthForm from '@containers/AuthForm';
 import CoursePage from '@containers/CoursePage';
 import { connect } from 'react-redux';
-import { store } from '@root/store';
 import HomePage from '@containers/HomePage';
+import { fetchUserInfoRoutine } from '@routines/userRoutines';
 
 interface IRouterProps {
   isAuthorized: boolean;
+  fetchUserInfo: () => any;
 }
 
-const AppRouter: React.FC<IRouterProps> = ({ isAuthorized }) => {
+const AppRouter: React.FC<IRouterProps> = ({
+  isAuthorized,
+  fetchUserInfo
+}) => {
   useEffect(() => {
-    const authStatus = Boolean(localStorage.getItem('accessToken'));
-    store.dispatch({
-      type: 'AUTHENTICATION:CHANGE',
-      payload: authStatus
-    });
+    fetchUserInfo();
   }, []);
 
   return (
@@ -40,4 +40,8 @@ const mapStateToProps = (state: any) => ({
   isAuthorized: state.auth.isAuthorized
 });
 
-export default connect(mapStateToProps)(AppRouter);
+const mapDispatchToProps = {
+  fetchUserInfo: fetchUserInfoRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter);

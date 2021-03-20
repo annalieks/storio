@@ -19,8 +19,8 @@ public class CourseCreateDto {
 
     private final String description;
 
-    private List<UUID> tags;
+    private List<TagShortDto> tags;
 
-    private List<UUID> sponsors;
+    private List<SponsorShortDto> sponsors;
 
 }

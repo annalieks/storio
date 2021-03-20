@@ -1,6 +1,8 @@
 package com.backend.storio.controller;
 
+import com.backend.storio.dto.CoursePreviewDto;
 import com.backend.storio.dto.UserInfoDto;
+import com.backend.storio.service.TokenService;
 import com.backend.storio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,9 +24,19 @@ public final class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/info/{id}")
-    public UserInfoDto getUserInfo(@PathVariable UUID id) {
-        return userService.findById(id);
+    @GetMapping("/info")
+    public UserInfoDto getUserInfo() {
+        return userService.findById(TokenService.getUserId());
+    }
+
+    @GetMapping("/courses/student/preview")
+    public List<CoursePreviewDto> getStudentCoursesPreview() {
+        return userService.getCoursesPreview(TokenService.getUserId(), true);
+    }
+
+    @GetMapping("/courses/teacher/preview")
+    public List<CoursePreviewDto> getTeacherCoursesPreview() {
+        return userService.getCoursesPreview(TokenService.getUserId(), false);
     }
 
 }

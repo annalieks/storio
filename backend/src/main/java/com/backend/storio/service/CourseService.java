@@ -1,9 +1,14 @@
 package com.backend.storio.service;
 
+import com.backend.storio.dao.Sponsor;
+import com.backend.storio.dao.Tag;
 import com.backend.storio.dto.CourseCreateDto;
+import com.backend.storio.dto.CoursePreviewDto;
 import com.backend.storio.exception.DuplicateEntityException;
 import com.backend.storio.exception.EntityNotFoundException;
 import com.backend.storio.mapper.CourseMapper;
+import com.backend.storio.mapper.SponsorMapper;
+import com.backend.storio.mapper.TagMapper;
 import com.backend.storio.repository.CourseRepository;
 import com.backend.storio.repository.SponsorRepository;
 import com.backend.storio.repository.TagRepository;
@@ -11,25 +16,21 @@ import com.backend.storio.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 public class CourseService {
 
     private final CourseRepository courseRepository;
 
-    private final TagRepository tagRepository;
-
-    private final SponsorRepository sponsorRepository;
-
     private final UserRepository userRepository;
 
     @Autowired
     public CourseService(final CourseRepository courseRepository,
-                         final TagRepository tagRepository,
-                         final SponsorRepository sponsorRepository,
                          final UserRepository userRepository) {
         this.courseRepository = courseRepository;
-        this.tagRepository = tagRepository;
-        this.sponsorRepository = sponsorRepository;
         this.userRepository = userRepository;
     }
 
@@ -54,8 +55,13 @@ public class CourseService {
         }
 
         teacherCourses.add(course);
-        var tags = tagRepository.findAllByIdIn(courseDto.getTags());
-        var sponsors = sponsorRepository.findAllByIdIn(courseDto.getSponsors());
+
+        List<Tag> tags = courseDto.getTags().stream()
+                .map(TagMapper.MAPPER::tagShortDtoToTag).collect(Collectors.toList());
+
+        List<Sponsor> sponsors = courseDto.getSponsors().stream()
+                .map(SponsorMapper.MAPPER::sponsorShortDtoToSponsor).collect(Collectors.toList());
+
         course.setTags(tags);
         course.setSponsors(sponsors);
         user.get().setTeacherCourses(teacherCourses);

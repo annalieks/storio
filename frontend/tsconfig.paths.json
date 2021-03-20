@@ -20,6 +20,9 @@
       "@helpers/*": [
         "helpers/*"
       ],
+      "@routines/*": [
+        "routines/*"
+      ],
       "@root/*": [
         "./*"
       ]

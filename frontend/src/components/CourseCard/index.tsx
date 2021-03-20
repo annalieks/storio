@@ -13,7 +13,7 @@ const CourseCard: React.FC<ICourseCardProps> = ({ course }) => (
       <img src={courseImage} alt="Lamps" />
     </div>
     <div className={styles.course_header}>{course.name}</div>
-    <div className={styles.course_students}>{course.studentsNumber}</div>
+    <div className={styles.course_students}>Students: {course.studentsNum}</div>
   </div>
 );
 

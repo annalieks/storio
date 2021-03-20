@@ -1,10 +1,10 @@
 export interface CourseData {
   name: string;
   description: string;
-
 }
 
 export interface CoursePreview {
+  id: string;
   name: string;
-  studentsNumber: number;
+  studentsNum: number;
 }
