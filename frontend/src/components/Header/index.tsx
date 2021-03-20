@@ -11,9 +11,9 @@ interface IHeaderProps {
 }
 
 export const Header: React.FC<IHeaderProps> = ({ isAuthorized }) => {
-  const routes = ['/', '/home'];
+  const excludedRoutes = ['/login', '/register'];
   const location = useLocation();
-  return routes.includes(location.pathname) ? (
+  return !excludedRoutes.includes(location.pathname) ? (
       <div className={styles.header_container}>
         <Link to="/">
           <img className={styles.logo} src={logo} alt="Storio logo"/>

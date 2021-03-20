@@ -3,3 +3,8 @@ export interface CourseData {
   description: string;
 
 }
+
+export interface CoursePreview {
+  name: string;
+  studentsNumber: number;
+}
