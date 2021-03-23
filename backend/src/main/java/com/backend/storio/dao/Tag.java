@@ -21,7 +21,4 @@ public class Tag {
     @Column
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    List<Course> courses;
-
 }

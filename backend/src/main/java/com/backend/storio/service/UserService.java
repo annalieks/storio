@@ -2,6 +2,7 @@ package com.backend.storio.service;
 
 import com.backend.storio.dao.User;
 import com.backend.storio.dto.AuthUserDto;
+import com.backend.storio.dto.CoursePreviewDto;
 import com.backend.storio.dto.UserDetailsDto;
 import com.backend.storio.dto.UserInfoDto;
 import com.backend.storio.exception.EntityNotFoundException;
@@ -12,8 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -50,6 +54,29 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id)
                 .map(UserMapper.MAPPER::userToUserDetailsDto)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found with such email"));
+    }
+
+    /**
+     * Finds short info about the user's courses
+     *
+     * @param id             id of the user for whom the courses will be found
+     * @param studentCourses true to fetch student courses, false - to fetch author courses
+     * @return list of courses previews
+     */
+    public List<CoursePreviewDto> getCoursesPreview(UUID id, boolean studentCourses) {
+        var userOptional = userRepository.findUserById(id);
+        if (userOptional.isEmpty()) {
+            throw new EntityNotFoundException("No such user exists");
+        }
+        var user = userOptional.get();
+        var courses = studentCourses
+                ? user.getStudentCourses()
+                : user.getTeacherCourses();
+
+        return courses.stream()
+                .map(c -> new CoursePreviewDto(id, c.getName(), c.getStudents().size()))
+                .collect(Collectors.toList());
+
     }
 
 }

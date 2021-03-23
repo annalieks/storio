@@ -1,9 +1,14 @@
 import React from 'react';
 import styles from './styles.module.sass';
 import { Footer } from '@components/Footer';
+import { Redirect } from 'react-router-dom';
 
-const LandingPage: React.FC = () => {
-  return (
+interface ILandingPageProps {
+  isAuthorized: boolean;
+}
+
+const LandingPage: React.FC<ILandingPageProps> = ({ isAuthorized }) => {
+  return isAuthorized ? <Redirect to="/home"/> : (
     <div className={styles.main_container}>
       <div className={styles.intro_container}>
         <div className={styles.slogan}>
@@ -22,7 +27,7 @@ const LandingPage: React.FC = () => {
           <p className={styles.quote_author}>— Josh Waitzkin</p>
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 };

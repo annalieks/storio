@@ -1,6 +1,6 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { AnyAction } from 'redux';
-import { fetchUserInfoRoutine, loginRoutine, signupRoutine } from '@root/routines/userRoutines';
+import { fetchUserInfoRoutine, loginRoutine, signupRoutine } from '@routines/userRoutines';
 import { toastr } from 'react-redux-toastr';
 import * as service from './service';
 import { LoginResponse, UserData } from '@models/userData';
@@ -9,7 +9,7 @@ function* login({ payload }: AnyAction) {
   try {
     const response: LoginResponse = yield call(() => service.login(payload.email, payload.password));
     service.setToken(response.token);
-    yield put(fetchUserInfoRoutine.trigger(response.user.id));
+    yield put(fetchUserInfoRoutine.trigger());
   } catch (error) {
     service.clearToken();
     yield put(loginRoutine.failure(error.message));
@@ -21,7 +21,7 @@ function* signup({ payload }: AnyAction) {
   try {
     const response: LoginResponse = yield call(() => service.signup(payload));
     service.setToken(response.token);
-    yield put(fetchUserInfoRoutine.trigger(response.user.id));
+    yield put(fetchUserInfoRoutine.trigger());
   } catch (error) {
     service.clearToken();
     yield put(signupRoutine.failure(error.message));
@@ -29,9 +29,9 @@ function* signup({ payload }: AnyAction) {
   }
 }
 
-function* fetchUserInfo({ payload }: AnyAction) {
+function* fetchUserInfo() {
   try {
-    const response: UserData = yield call(() => service.fetchUserInfo(payload));
+    const response: UserData = yield call(() => service.fetchUserInfo());
     yield put(fetchUserInfoRoutine.success(response));
   } catch (error) {
     yield put(fetchUserInfoRoutine.failure(error.message));

@@ -24,7 +24,4 @@ public class Sponsor {
     @Column
     private String description;
 
-    @ManyToMany(mappedBy = "sponsors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Course> courses;
-
 }

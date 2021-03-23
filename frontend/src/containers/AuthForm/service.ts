@@ -29,10 +29,10 @@ export const signup = async (user: RegisterData): Promise<any> => {
   return result.json();
 };
 
-export const fetchUserInfo = async (id: string): Promise<any> => {
+export const fetchUserInfo = async (): Promise<any> => {
   const result = await callApi({
-    endpoint: `/user/info/${id}`,
-    type: 'GET'
+    endpoint: `/user/info`,
+    type: 'GET',
   });
 
   return result.json();
