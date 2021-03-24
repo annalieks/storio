@@ -1,5 +1,4 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { AnyAction } from 'redux';
 import * as service from './service';
 import { CoursePreview } from '@models/courseData';
 import { fetchStudentCoursesRoutine, fetchTeacherCoursesRoutine } from '@routines/courseRoutines';

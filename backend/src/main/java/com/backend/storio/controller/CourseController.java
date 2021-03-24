@@ -1,6 +1,7 @@
 package com.backend.storio.controller;
 
 import com.backend.storio.dto.CourseCreateDto;
+import com.backend.storio.dto.CourseInfoDto;
 import com.backend.storio.dto.CoursePreviewDto;
 import com.backend.storio.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,11 @@ public final class CourseController {
     @Autowired
     public CourseController(final CourseService courseService) {
         this.courseService = courseService;
+    }
+
+    @GetMapping("/info/{id}")
+    public CourseInfoDto getCourseInfo(@PathVariable UUID id) {
+        return courseService.getCourseInfo(id);
     }
 
     @PostMapping("/create")

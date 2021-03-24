@@ -26,3 +26,10 @@ export interface RegisterData {
   lastName: string;
   password: string;
 }
+
+export interface ShortUserInfo {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}

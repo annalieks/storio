@@ -1,14 +1,18 @@
 package com.backend.storio.service;
 
+import com.backend.storio.dao.Course;
 import com.backend.storio.dao.Sponsor;
 import com.backend.storio.dao.Tag;
 import com.backend.storio.dto.CourseCreateDto;
+import com.backend.storio.dto.CourseInfoDto;
 import com.backend.storio.dto.CoursePreviewDto;
+import com.backend.storio.dto.UserInfoDto;
 import com.backend.storio.exception.DuplicateEntityException;
 import com.backend.storio.exception.EntityNotFoundException;
 import com.backend.storio.mapper.CourseMapper;
 import com.backend.storio.mapper.SponsorMapper;
 import com.backend.storio.mapper.TagMapper;
+import com.backend.storio.mapper.UserMapper;
 import com.backend.storio.repository.CourseRepository;
 import com.backend.storio.repository.SponsorRepository;
 import com.backend.storio.repository.TagRepository;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -32,6 +37,34 @@ public class CourseService {
                          final UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
+    }
+
+    /**
+     * Returns the necessary information about the course
+     *
+     * @param id course id
+     * @return CourseInfoDto containing the information
+     */
+    public CourseInfoDto getCourseInfo(final UUID id) {
+        Course course = courseRepository.findCourseById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
+
+        UserInfoDto teacher = UserMapper.MAPPER.userToUserInfoDto(course.getCreator());
+        List<UserInfoDto> students = course.getStudents().stream()
+                .map(UserMapper.MAPPER::userToUserInfoDto)
+                .collect(Collectors.toList());
+        List<String> tags = course.getTags().stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
+
+        return CourseInfoDto.builder()
+                .id(course.getId())
+                .name(course.getName())
+                .description(course.getDescription())
+                .teacher(teacher)
+                .students(students)
+                .tags(tags)
+                .build();
     }
 
     /**
