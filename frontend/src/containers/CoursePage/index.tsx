@@ -10,6 +10,8 @@ import { AssignmentPreview } from '@models/assignmentData';
 import Tag from '@components/Tag';
 import Menu from '@components/Menu';
 import Publication from '@components/Publication';
+import GradientButton from '@components/GradientButton';
+import PublicationForm from '@components/PublicationForm';
 
 enum SelectedMenu {
   Posts,
@@ -20,6 +22,7 @@ enum SelectedMenu {
 
 interface ICoursePageProps {
   id: string;
+  userId: string;
   name: string;
   description: string;
   teacher: ShortUserInfo;
@@ -44,6 +47,7 @@ const assignmentMock: AssignmentPreview = {
 
 const CoursePage: React.FC<ICoursePageProps> = ({
   id,
+  userId,
   name,
   description,
   teacher,
@@ -97,19 +101,23 @@ const CoursePage: React.FC<ICoursePageProps> = ({
       </div>
       <div className={styles.content_container}>
         {selected === SelectedMenu.Posts
-        && posts.map(p => <Publication id={p.id} text={p.text} author={p.author}/>)}
+        && (
+          <>
+            <PublicationForm userId={userId} />
+            <Publication id={assignmentMock.id} text={assignmentMock.text} author={assignmentMock.author}/>
+            {posts.map(p => <Publication id={p.id} text={p.text} author={p.author}/>)}
+          </>
+        )}
         {selected === SelectedMenu.Assignments
-        // && assignments.map(a =>
-        //   <Publication id={a.id} text={a.text} author={a.author} dueDate={a.dueDate}/>)}
-          &&
-          <Publication id={assignmentMock.id} text={assignmentMock.text}
-                       author={assignmentMock.author} dueDate={assignmentMock.dueDate}/>}
+        && assignments.map(a =>
+          <Publication id={a.id} text={a.text} author={a.author} dueDate={a.dueDate}/>)}
       </div>
     </div>
   );
 };
 
 const mapStateToProps = (state: any) => ({
+  userId : state.auth.id,
   id: state.course.id,
   name: state.course.name,
   description: state.course.description,

@@ -26,9 +26,7 @@
 .icon_menu
   cursor: pointer
   transition: 0.2s
-
-  &:hover
-    color: $orange-color !important
+  position: relative
 
 .text_menu
   transition: 0.2s
@@ -40,4 +38,31 @@
 .user_icon
   font-size: 2.5em !important
 
+  &:hover
+    color: $orange-color !important
+
+.dropdown_menu
+  position: absolute
+  top: 3.4em
+  right: 0.5rem
+  width: 10rem
+  padding: 1rem
+  background-color: $black-color-1
+  box-shadow: 0 0 5px 3px rgba(245,191,118,0.4)
+
+.dropdown_item
+  display: flex
+  button
+    cursor: pointer
+    outline: none
+    border: none
+    font-size: inherit
+    font-family: inherit
+    flex-grow: 1
+    padding: 0.5rem 0 0.5rem 0
+    background: none
+    transition: 0.3s
+    color: inherit
+    &:hover
+      background-color: $blue-color
 

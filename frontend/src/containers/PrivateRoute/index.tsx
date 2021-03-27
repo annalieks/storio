@@ -2,18 +2,9 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-interface IPrivateRouteProps {
-  isAuthorized: boolean;
-  component: React.FC;
-}
-
-const PrivateRoute: React.FC<IPrivateRouteProps> = ({
-  isAuthorized,
-  component,
-  ...rest
-}) => {
-  return isAuthorized
-    ? (<Route {...rest} component={component}/>)
+const PrivateRoute = (props: any) => {
+  return localStorage.getItem('accessToken')
+    ? (<Route {...props} component={props.component}/>)
     : (<Redirect to="/login"/>);
 };
 
