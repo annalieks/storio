@@ -8,14 +8,13 @@ import CoursePage from '@containers/CoursePage';
 import { connect } from 'react-redux';
 import HomePage from '@containers/HomePage';
 import { fetchUserInfoRoutine } from '@routines/userRoutines';
+import PrivateRoute from '@containers/PrivateRoute';
 
 interface IRouterProps {
-  isAuthorized: boolean;
   fetchUserInfo: () => any;
 }
 
 const AppRouter: React.FC<IRouterProps> = ({
-  isAuthorized,
   fetchUserInfo
 }) => {
   useEffect(() => {
@@ -24,24 +23,20 @@ const AppRouter: React.FC<IRouterProps> = ({
 
   return (
     <Router history={history}>
-      <Header isAuthorized={isAuthorized}/>
+      <Header/>
       <Switch>
-        <Route exact path="/" component={() => <LandingPage isAuthorized={isAuthorized}/>}/>
-        <Route exact path="/home" component={HomePage}/>
+        <Route exact path="/" component={() => <LandingPage/>}/>
+        <PrivateRoute exact path="/home" component={HomePage}/>
         <Route exact path="/login" component={() => <AuthForm register={false}/>}/>
         <Route exact path="/signup" component={() => <AuthForm register={true}/>}/>
-        <Route exact path="/course/:courseId" component={CoursePage}/>
+        <PrivateRoute exact path="/course/:courseId" component={CoursePage}/>
       </Switch>
     </Router>
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  isAuthorized: state.auth.isAuthorized
-});
-
 const mapDispatchToProps = {
   fetchUserInfo: fetchUserInfoRoutine
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppRouter);
+export default connect(null, mapDispatchToProps)(AppRouter);

@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,17 +63,15 @@ public class UserService implements UserDetailsService {
      * @return list of courses previews
      */
     public List<CoursePreviewDto> getCoursesPreview(UUID id, boolean studentCourses) {
-        var userOptional = userRepository.findUserById(id);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException("No such user exists");
-        }
-        var user = userOptional.get();
+        var user = userRepository.findUserById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No such user exists"));
+
         var courses = studentCourses
                 ? user.getStudentCourses()
                 : user.getTeacherCourses();
 
         return courses.stream()
-                .map(c -> new CoursePreviewDto(id, c.getName(), c.getStudents().size()))
+                .map(c -> new CoursePreviewDto(c.getId(), c.getName(), c.getStudents().size()))
                 .collect(Collectors.toList());
 
     }

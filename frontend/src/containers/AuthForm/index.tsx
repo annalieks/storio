@@ -97,7 +97,7 @@ const AuthForm: React.FC<IAuthFormProps> = ({
 ;
 
 const mapStateToProps = (state: any) => ({
-  isAuthorized: state.auth.isAuthorized
+  isAuthorized: state.auth.isAuthorized,
 });
 
 const mapDispatchToProps = {
