@@ -19,7 +19,7 @@ const Menu: React.FC<IMenuProps> = ({
   const menuItemStyle = (i: number) => `${styles.menu_item} ${
     isItemActive(i)
       ? styles.active_menu
-      : styles.inactive_menu}`;
+      : ''}`;
 
   const handleOnClick = (i: number, onClick: () => any) => {
     setActive(i);
@@ -37,7 +37,7 @@ const Menu: React.FC<IMenuProps> = ({
           >
             {item.text}
           </button>
-          <div className={styles.item_separator}/>
+          <div className={isItemActive(i) ? '' : styles.item_separator}/>
         </div>)}
     </div>
   );

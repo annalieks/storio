@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import lampImage from '@assets/course.jpg';
 import styles from './styles.module.sass';
-import { fetchCourseInfoRoutine } from '@routines/courseRoutines';
+import { fetchCourseInfoRoutine, fetchPostsRoutine } from '@routines/courseRoutines';
 import { connect } from 'react-redux';
 import { ShortUserInfo } from '@models/userData';
-import { PostPreview } from '@models/postData';
+import { PostCreate, PostPreview } from '@models/postData';
 import { AssignmentPreview } from '@models/assignmentData';
 import Tag from '@components/Tag';
 import Menu from '@components/Menu';
 import Publication from '@components/Publication';
-import GradientButton from '@components/GradientButton';
 import PublicationForm from '@components/PublicationForm';
+import { createPostRoutine } from '@routines/postRoutines';
 
 enum SelectedMenu {
   Posts,
@@ -22,7 +22,6 @@ enum SelectedMenu {
 
 interface ICoursePageProps {
   id: string;
-  userId: string;
   name: string;
   description: string;
   teacher: ShortUserInfo;
@@ -31,6 +30,8 @@ interface ICoursePageProps {
   assignments: AssignmentPreview[];
   students: ShortUserInfo[];
   fetchCourseInfo: (id: string) => any;
+  createPost: (data: PostCreate) => any,
+  fetchPosts: (courseId: string) => any,
 }
 
 const assignmentMock: AssignmentPreview = {
@@ -47,7 +48,6 @@ const assignmentMock: AssignmentPreview = {
 
 const CoursePage: React.FC<ICoursePageProps> = ({
   id,
-  userId,
   name,
   description,
   teacher,
@@ -55,7 +55,9 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   posts,
   assignments,
   students,
-  fetchCourseInfo
+  fetchCourseInfo,
+  createPost,
+  fetchPosts,
 }) => {
   const { courseId } = useParams() as { courseId: string };
   const [selected, setSelected] = useState(SelectedMenu.Posts);
@@ -76,6 +78,7 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   useEffect(() => {
     if (courseId) {
       fetchCourseInfo(courseId);
+      fetchPosts(courseId);
     }
   }, [courseId]);
   return (
@@ -103,9 +106,8 @@ const CoursePage: React.FC<ICoursePageProps> = ({
         {selected === SelectedMenu.Posts
         && (
           <>
-            <PublicationForm userId={userId} />
-            <Publication id={assignmentMock.id} text={assignmentMock.text} author={assignmentMock.author}/>
-            {posts.map(p => <Publication id={p.id} text={p.text} author={p.author}/>)}
+            <PublicationForm onSubmit={createPost} courseId={id}/>
+            {[...posts].reverse().map(p => <Publication id={p.id} text={p.text} author={p.author}/>)}
           </>
         )}
         {selected === SelectedMenu.Assignments
@@ -117,7 +119,6 @@ const CoursePage: React.FC<ICoursePageProps> = ({
 };
 
 const mapStateToProps = (state: any) => ({
-  userId : state.auth.id,
   id: state.course.id,
   name: state.course.name,
   description: state.course.description,
@@ -129,7 +130,9 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-  fetchCourseInfo: fetchCourseInfoRoutine
+  fetchCourseInfo: fetchCourseInfoRoutine,
+  createPost: createPostRoutine,
+  fetchPosts: fetchPostsRoutine,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage);

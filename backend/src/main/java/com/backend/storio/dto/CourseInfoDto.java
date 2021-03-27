@@ -22,6 +22,4 @@ public class CourseInfoDto {
 
     private final List<String> tags;
 
-    private final List<UserInfoDto> students;
-
 }

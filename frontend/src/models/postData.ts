@@ -5,3 +5,8 @@ export interface PostPreview {
   text: string;
   author: ShortUserInfo;
 }
+
+export interface PostCreate {
+  courseId: string,
+  text: string;
+}

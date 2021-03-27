@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
 import styles from './styles.module.sass';
 import GradientButton from '@components/GradientButton';
+import { PostCreate } from '@models/postData';
+import { AssignmentCreate } from '@models/assignmentData';
 
 interface IPublicationFormProps {
-  userId: string;
+  courseId: string,
   isAssignment?: boolean;
+  onSubmit: (data: PostCreate | AssignmentCreate) => any;
 }
 
 const PublicationForm: React.FC<IPublicationFormProps> = ({
-  userId,
-  isAssignment
+  courseId,
+  isAssignment,
+  onSubmit
 }) => {
   const [text, setText] = useState('');
+  const submit = () => {
+    if (!text)
+      return;
+    onSubmit({
+      courseId, // todo: assignment case
+      text: text.trim(),
+    });
+  };
 
   return (
     <div className={styles.form_container}>
@@ -22,7 +34,10 @@ const PublicationForm: React.FC<IPublicationFormProps> = ({
         onChange={(e) => setText(e.target.value)}
       />
       <div className={styles.button_container}>
-        <GradientButton text="Create Post" onClick={() => console.log('Placeholder create course')}/>
+        <GradientButton
+          text={isAssignment ? 'Create Assignment' : 'Create Post'}
+          onClick={() => submit()}
+        />
       </div>
     </div>
   );

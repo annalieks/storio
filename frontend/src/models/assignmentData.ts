@@ -6,3 +6,9 @@ export interface AssignmentPreview {
   dueDate: string;
   author: ShortUserInfo;
 }
+
+export interface AssignmentCreate {
+  courseId: string,
+  text: string;
+  dueDate: Date;
+}

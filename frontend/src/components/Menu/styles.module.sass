@@ -8,10 +8,8 @@
   display: flex
   flex-direction: column
   cursor: pointer
-  transition: 0.3s
+
   &:hover
-    border-radius: 30px
-    box-shadow: 3px 0 7px $orange-color, -3px 0px 7px $orange-color, 0px 4px 7px $orange-color !important
     .item_separator
       opacity: 0
 
@@ -29,3 +27,13 @@
   font-size: 1.1em
   padding: 0.7rem 1.2rem 0.7rem 1.2rem
   border: none
+  margin-right: 0.7rem
+  transition: 0.3s
+
+  &:hover
+    border-radius: 30px
+    box-shadow: 3px 0 7px $orange-color, -3px 0px 7px $orange-color, 0px 4px 7px $orange-color !important
+
+.active_menu
+  border-radius: 30px
+  box-shadow: 3px 0 7px $orange-color, -3px 0px 7px $orange-color, 0px 4px 7px $orange-color !important
