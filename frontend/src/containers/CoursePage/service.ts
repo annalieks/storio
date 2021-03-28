@@ -27,3 +27,21 @@ export const fetchPosts = async (id: string): Promise<any> => {
   return result.json();
 };
 
+export const fetchStudents = async (id: string): Promise<any> => {
+  const result = await callApi({
+    endpoint: `/course/students/${id}`,
+    type: 'GET'
+  });
+
+  return result.json();
+};
+
+export const fetchTeacher = async (id: string): Promise<any> => {
+  const result = await callApi({
+    endpoint: `/course/teacher/${id}`,
+    type: 'GET'
+  });
+
+  return result.json();
+};
+
