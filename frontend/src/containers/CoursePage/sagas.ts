@@ -1,13 +1,14 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import * as service from './service';
 import { toastr } from 'react-redux-toastr';
-import { fetchCourseInfoRoutine, fetchPostsRoutine } from '@routines/courseRoutines';
+import { fetchCourseInfoRoutine, fetchPostsRoutine, fetchStudentsRoutine } from '@routines/courseRoutines';
 import { AnyAction } from 'redux';
 import { createPostRoutine } from '@routines/postRoutines';
+import { CourseInfo } from '@models/courseData';
 
 function* fetchCourseInfo({ payload }: AnyAction) {
   try {
-    const response: [] = yield call(() => service.fetchCourseInfo(payload));
+    const response: CourseInfo = yield call(() => service.fetchCourseInfo(payload));
     yield put(fetchCourseInfoRoutine.success(response));
   } catch (error) {
     yield put(fetchCourseInfoRoutine.failure(error.message));
@@ -34,6 +35,15 @@ function* fetchPosts({ payload }: AnyAction) {
   }
 }
 
+function* fetchStudents({ payload }: AnyAction) {
+  try {
+    const response: [] = yield call(() => service.fetchStudents(payload));
+    yield put(fetchStudentsRoutine.success(response));
+  } catch (error) {
+    yield put(fetchStudentsRoutine.failure(error.message));
+  }
+}
+
 function* watchFetchCourseInfo() {
   yield takeEvery(fetchCourseInfoRoutine.TRIGGER, fetchCourseInfo);
 }
@@ -46,10 +56,15 @@ function* watchFetchPosts() {
   yield takeEvery(fetchPostsRoutine.TRIGGER, fetchPosts);
 }
 
+function* watchFetchStudents() {
+  yield takeEvery(fetchStudentsRoutine.TRIGGER, fetchStudents);
+}
+
 export default function* authSagas() {
   yield all([
     watchFetchCourseInfo(),
     watchCreatePost(),
     watchFetchPosts(),
+    watchFetchStudents()
   ]);
 }

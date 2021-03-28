@@ -3,10 +3,12 @@ package com.backend.storio.service;
 import com.backend.storio.dao.Course;
 import com.backend.storio.dao.Sponsor;
 import com.backend.storio.dao.Tag;
+import com.backend.storio.dao.User;
 import com.backend.storio.dto.CourseCreateDto;
 import com.backend.storio.dto.CourseInfoDto;
 import com.backend.storio.dto.PostPreviewDto;
 import com.backend.storio.dto.UserInfoDto;
+import com.backend.storio.exception.AccessRightsException;
 import com.backend.storio.exception.DuplicateEntityException;
 import com.backend.storio.exception.EntityNotFoundException;
 import com.backend.storio.mapper.*;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,12 +37,70 @@ public class CourseService {
     }
 
     /**
+     * Get the course teacher
+     *
+     * @param id course id
+     * @return teacher info
+     */
+    public UserInfoDto getTeacher(UUID id) {
+        if (!isCourseMember(id, TokenService.getUserId()))
+            throw new AccessRightsException("Course students can be viewed only by the members");
+
+        Course course = courseRepository.findCourseById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
+
+        return UserMapper.MAPPER.userToUserInfoDto(course.getCreator());
+    }
+
+    /**
+     * Get all course students
+     *
+     * @param id course id
+     * @return list of course students
+     */
+    public List<UserInfoDto> getStudents(UUID id) {
+        if (!isCourseMember(id, TokenService.getUserId()))
+            throw new AccessRightsException("Course students can be viewed only by the members");
+
+        Course course = courseRepository.findCourseById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
+
+        return course.getStudents().stream()
+                .map(UserMapper.MAPPER::userToUserInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Add student to the course by email
+     *
+     * @param courseId      id of the course
+     * @param currentUserId id of the current user
+     * @param email         student email
+     */
+    public void addStudent(UUID courseId, UUID currentUserId, String email) {
+        Course course = courseRepository.findCourseById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
+
+        if (!currentUserId.equals(course.getCreator().getId())) {
+            throw new AccessRightsException("Only course teacher can add students");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("No user with such email exist"));
+
+        course.getStudents().add(user);
+    }
+
+    /**
      * Returns all course posts
      *
      * @param id course id
      * @return list of course posts
      */
     public List<PostPreviewDto> getPosts(UUID id) {
+        if (!isCourseMember(id, TokenService.getUserId()))
+            throw new AccessRightsException("Course posts can be viewed only by the members");
+
         Course course = courseRepository.findCourseById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
 
@@ -56,6 +117,9 @@ public class CourseService {
      * @return CourseInfoDto containing the information
      */
     public CourseInfoDto getCourseInfo(final UUID id) {
+        if (!isCourseMember(id, TokenService.getUserId()))
+            throw new AccessRightsException("Course info can be viewed only by the members");
+
         Course course = courseRepository.findCourseById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
 
@@ -109,6 +173,15 @@ public class CourseService {
 
         courseRepository.save(course);
         userRepository.save(user.get());
+    }
+
+    private boolean isCourseMember(UUID courseId, UUID userId) {
+        Optional<Course> courseOptional = courseRepository.findCourseById(courseId);
+        if (courseOptional.isEmpty())
+            return false;
+        Course course = courseOptional.get();
+        return userId.equals(course.getCreator().getId())
+                || course.getStudents().stream().anyMatch(s -> s.getId().equals(userId));
     }
 
 }

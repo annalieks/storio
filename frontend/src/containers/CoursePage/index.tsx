@@ -12,6 +12,9 @@ import Menu from '@components/Menu';
 import Publication from '@components/Publication';
 import PublicationForm from '@components/PublicationForm';
 import { createPostRoutine } from '@routines/postRoutines';
+import StudentsForm from '@components/StudentsForm';
+import StudentCard from '@components/StudentCard';
+import PeopleBlock from '@components/PeopleBlock';
 
 enum SelectedMenu {
   Posts,
@@ -57,7 +60,7 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   students,
   fetchCourseInfo,
   createPost,
-  fetchPosts,
+  fetchPosts
 }) => {
   const { courseId } = useParams() as { courseId: string };
   const [selected, setSelected] = useState(SelectedMenu.Posts);
@@ -107,12 +110,19 @@ const CoursePage: React.FC<ICoursePageProps> = ({
         && (
           <>
             <PublicationForm onSubmit={createPost} courseId={id}/>
-            {[...posts].reverse().map(p => <Publication id={p.id} text={p.text} author={p.author}/>)}
+            {[...posts].reverse()
+              .map(p => <Publication id={p.id} text={p.text} author={p.author}/>)}
           </>
         )}
         {selected === SelectedMenu.Assignments
         && assignments.map(a =>
-          <Publication id={a.id} text={a.text} author={a.author} dueDate={a.dueDate}/>)}
+            <Publication id={a.id} text={a.text} author={a.author} dueDate={a.dueDate}/>)}
+        {selected === SelectedMenu.People &&
+          <>
+            <StudentsForm  courseId={id} onSubmit={() => console.log('Hi')} />
+            <PeopleBlock students={students} teacher={teacher} />
+          </>
+        }
       </div>
     </div>
   );
@@ -132,7 +142,7 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = {
   fetchCourseInfo: fetchCourseInfoRoutine,
   createPost: createPostRoutine,
-  fetchPosts: fetchPostsRoutine,
+  fetchPosts: fetchPostsRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage);
