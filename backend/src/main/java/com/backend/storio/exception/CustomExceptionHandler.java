@@ -31,4 +31,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AccessRightsException.class)
+    private ResponseEntity<Object> handleAccessRightsException(final AccessRightsException e) {
+        return ResponseEntity.status(403).body(
+                MessageFormat.format("No right to perform the operation: {0}", e.getMessage())
+        );
+    }
+
 }

@@ -7,7 +7,7 @@ import { NavigationBlock } from '@components/Header/NavigationBlock';
 import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
-  const excludedRoutes = ['/login', '/register'];
+  const excludedRoutes = ['/login', '/signup'];
   const location = useLocation();
   return !excludedRoutes.includes(location.pathname) ? (
       <div className={styles.header_container}>
