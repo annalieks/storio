@@ -1,14 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReduxToastr from 'react-redux-toastr';
 import { Provider } from 'react-redux';
 import { store } from '@root/store';
 import AppRouter from '@containers/AppRouter';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
+import ToDoItem from '@components/ToDoItem';
+import styles from './styles.module.sass';
 
-const App: React.FC = () => (
-  <div className='todo_list'>
-    
-  </div>
-);
+const App: React.FC = () => {
+
+  // TODO: use redux
+  const [todos, setTodos] = useState([
+    {
+      id: '1',
+      text: 'walk a dog',
+      done: false
+    }
+  ]);
+
+  return (<div className={styles.todo_content}>
+      <h2 className={styles.todo_header}>
+        {
+          todos.length > 0 ? 'Your ToDo list' : 'Your ToDo list is empty' 
+        }
+      </h2>
+      <div className={styles.todo_list}>
+        {
+          todos.map((todo, index) => (
+            <ToDoItem 
+              id={todo.id}
+              key={todo.id}
+              text={todo.text}
+              done={todo.done}
+              changeCallback={(val) => {
+                const newTodos = todos.map((todo, i) => i == index ? val : todo);
+                setTodos(newTodos);
+              }}
+              deleteCallback={() => {
+                const newTodos = todos.filter((todo, i) => i !== index);
+                setTodos(newTodos);
+              }}
+            />
+          ))
+        }
+      </div>
+    </div>
+  )
+};
 
 export default App;
