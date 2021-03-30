@@ -28,7 +28,7 @@ const Publication: React.FC<IPublicationProps> = ({
       <div className={styles.text}>{text}</div>
       <div className={`${styles.author_info} ${styles.colored_text}`} onClick={() => handleAuthorClick()}>
         <p>
-          by {author.firstName} {author.lastName}
+          by {author?.firstName} {author?.lastName}
         </p>
       </div>
     </div>

@@ -4,10 +4,7 @@ import com.backend.storio.dao.Course;
 import com.backend.storio.dao.Sponsor;
 import com.backend.storio.dao.Tag;
 import com.backend.storio.dao.User;
-import com.backend.storio.dto.CourseCreateDto;
-import com.backend.storio.dto.CourseInfoDto;
-import com.backend.storio.dto.PostPreviewDto;
-import com.backend.storio.dto.UserInfoDto;
+import com.backend.storio.dto.*;
 import com.backend.storio.exception.AccessRightsException;
 import com.backend.storio.exception.DuplicateEntityException;
 import com.backend.storio.exception.EntityNotFoundException;
@@ -34,6 +31,36 @@ public class CourseService {
                          final UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
+    }
+
+    /**
+     * Get course assignments
+     *
+     * @param id course id
+     * @return list of assignment previews
+     */
+    public List<AssignmentPreviewDto> getAssignments(UUID id) {
+        Course course = courseRepository.findCourseById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
+
+        return course.getAssignments().stream()
+                .map(AssignmentMapper.MAPPER::assignmentToAssignmentPreviewDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the list of course sponsors
+     *
+     * @param id course id
+     * @return list of sponsor info
+     */
+    public List<SponsorInfo> getSponsors(UUID id) {
+        Course course = courseRepository.findCourseById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No course with such id"));
+
+        return course.getSponsors().stream()
+                .map(SponsorMapper.MAPPER::sponsorToSponsorInfoDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -88,7 +115,12 @@ public class CourseService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("No user with such email exist"));
 
+        if (course.getStudents().stream().anyMatch(s -> s.getId().equals(user.getId()))) {
+            throw new DuplicateEntityException("The user is already a class student");
+        }
+
         course.getStudents().add(user);
+        courseRepository.save(course);
     }
 
     /**
