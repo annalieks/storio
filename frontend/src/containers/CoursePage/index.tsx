@@ -2,19 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import lampImage from '@assets/course.jpg';
 import styles from './styles.module.sass';
-import { fetchCourseInfoRoutine, fetchPostsRoutine } from '@routines/courseRoutines';
+import {
+  addStudentRoutine, fetchAssignmentsRoutine,
+  fetchCourseInfoRoutine,
+  fetchPostsRoutine,
+  fetchSponsorsRoutine,
+  fetchStudentsRoutine
+} from '@routines/courseRoutines';
 import { connect } from 'react-redux';
 import { ShortUserInfo } from '@models/userData';
 import { PostCreate, PostPreview } from '@models/postData';
-import { AssignmentPreview } from '@models/assignmentData';
+import { AssignmentCreate, AssignmentPreview } from '@models/assignmentData';
 import Tag from '@components/Tag';
 import Menu from '@components/Menu';
 import Publication from '@components/Publication';
 import PublicationForm from '@components/PublicationForm';
 import { createPostRoutine } from '@routines/postRoutines';
 import StudentsForm from '@components/StudentsForm';
-import StudentCard from '@components/StudentCard';
 import PeopleBlock from '@components/PeopleBlock';
+import { SponsorPreview } from '@models/sponsorData';
+import SponsorCard from '@components/SponsorCard';
+import { createAssignmentRoutine } from '@routines/assignmentRoutines';
 
 enum SelectedMenu {
   Posts,
@@ -25,6 +33,7 @@ enum SelectedMenu {
 
 interface ICoursePageProps {
   id: string;
+  currentUserId: string;
   name: string;
   description: string;
   teacher: ShortUserInfo;
@@ -32,25 +41,20 @@ interface ICoursePageProps {
   posts: PostPreview[];
   assignments: AssignmentPreview[];
   students: ShortUserInfo[];
+  sponsors: SponsorPreview[];
   fetchCourseInfo: (id: string) => any;
-  createPost: (data: PostCreate) => any,
-  fetchPosts: (courseId: string) => any,
+  createPost: (data: PostCreate) => any;
+  fetchPosts: (courseId: string) => any;
+  fetchStudents: (courseId: string) => any;
+  fetchSponsors: (courseId: string) => any;
+  fetchAssignments: (courseId: string) => any;
+  addStudent: (courseId: string, email: string) => any;
+  createAssignment: (data: AssignmentCreate) => any;
 }
-
-const assignmentMock: AssignmentPreview = {
-  id: '1',
-  text: 'abc',
-  dueDate: '1 March 24:00',
-  author: {
-    id: '2',
-    firstName: 'Some',
-    lastName: 'User',
-    email: 'aaa'
-  }
-};
 
 const CoursePage: React.FC<ICoursePageProps> = ({
   id,
+  currentUserId,
   name,
   description,
   teacher,
@@ -60,7 +64,13 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   students,
   fetchCourseInfo,
   createPost,
-  fetchPosts
+  fetchPosts,
+  fetchStudents,
+  addStudent,
+  sponsors,
+  fetchSponsors,
+  createAssignment,
+  fetchAssignments,
 }) => {
   const { courseId } = useParams() as { courseId: string };
   const [selected, setSelected] = useState(SelectedMenu.Posts);
@@ -81,9 +91,17 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   useEffect(() => {
     if (courseId) {
       fetchCourseInfo(courseId);
-      fetchPosts(courseId);
     }
-  }, [courseId]);
+    if (selected === SelectedMenu.Posts) {
+      fetchPosts(courseId);
+    } else if (selected === SelectedMenu.People) {
+      fetchStudents(courseId);
+    } else if (selected === SelectedMenu.Sponsors) {
+      fetchSponsors(courseId);
+    } else if (selected === SelectedMenu.Assignments) {
+      fetchAssignments(courseId);
+    }
+  }, [courseId, selected]);
   return (
     <div className={styles.course_container}>
       <div className={styles.course_header}>
@@ -115,14 +133,22 @@ const CoursePage: React.FC<ICoursePageProps> = ({
           </>
         )}
         {selected === SelectedMenu.Assignments
-        && assignments.map(a =>
-            <Publication id={a.id} text={a.text} author={a.author} dueDate={a.dueDate}/>)}
+        &&
+        <>
+          {currentUserId === teacher.id &&
+          <PublicationForm courseId={id} onSubmit={createAssignment} isAssignment/>}
+          {[...assignments].reverse()
+            .map(a =>
+              <Publication id={a.id} text={a.title} author={teacher} dueDate={a.deadline}/>)}
+        </>}
         {selected === SelectedMenu.People &&
-          <>
-            <StudentsForm  courseId={id} onSubmit={() => console.log('Hi')} />
-            <PeopleBlock students={students} teacher={teacher} />
-          </>
+        <>
+          <StudentsForm courseId={id} onSubmit={addStudent}/>
+          <PeopleBlock students={students} teacher={teacher}/>
+        </>
         }
+        {selected === SelectedMenu.Sponsors
+        && sponsors.map(s => <SponsorCard name={s.name} description={s.description}/>)}
       </div>
     </div>
   );
@@ -130,19 +156,26 @@ const CoursePage: React.FC<ICoursePageProps> = ({
 
 const mapStateToProps = (state: any) => ({
   id: state.course.id,
+  currentUserId: state.auth.id,
   name: state.course.name,
   description: state.course.description,
   teacher: state.course.teacher,
   tags: state.course.tags,
   posts: state.course.posts,
   assignments: state.course.assignments,
-  students: state.course.students
+  students: state.course.students,
+  sponsors: state.course.sponsors
 });
 
 const mapDispatchToProps = {
   fetchCourseInfo: fetchCourseInfoRoutine,
   createPost: createPostRoutine,
-  fetchPosts: fetchPostsRoutine
+  fetchPosts: fetchPostsRoutine,
+  addStudent: addStudentRoutine,
+  fetchStudents: fetchStudentsRoutine,
+  fetchSponsors: fetchSponsorsRoutine,
+  createAssignment: createAssignmentRoutine,
+  fetchAssignments: fetchAssignmentsRoutine,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage);

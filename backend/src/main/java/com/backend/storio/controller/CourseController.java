@@ -1,9 +1,6 @@
 package com.backend.storio.controller;
 
-import com.backend.storio.dto.CourseCreateDto;
-import com.backend.storio.dto.CourseInfoDto;
-import com.backend.storio.dto.PostPreviewDto;
-import com.backend.storio.dto.UserInfoDto;
+import com.backend.storio.dto.*;
 import com.backend.storio.service.CourseService;
 import com.backend.storio.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +35,14 @@ public final class CourseController {
         return courseService.getStudents(id);
     }
 
-    @GetMapping("/teacher/{id}")
-    public UserInfoDto getCourseTeacher(@PathVariable UUID id) {
-        return courseService.getTeacher(id);
+    @GetMapping("/sponsors/{id}")
+    public List<SponsorInfo> getSponsors(@PathVariable UUID id) {
+        return courseService.getSponsors(id);
+    }
+
+    @GetMapping("/assignments/{id}")
+    public List<AssignmentPreviewDto> getAssignments(@PathVariable UUID id) {
+        return courseService.getAssignments(id);
     }
 
     @PostMapping("/create")
@@ -48,9 +50,10 @@ public final class CourseController {
         courseService.createCourse(courseDto);
     }
 
-    @PostMapping("/student/{id}")
-    public void addStudent(@PathVariable UUID id, @RequestBody String email) {
-        courseService.addStudent(id, TokenService.getUserId(), email);
+    @PostMapping("/student")
+    public void addStudent(@RequestBody AddStudentDto addStudentDto) {
+        courseService.addStudent(addStudentDto.getCourseId(),
+                TokenService.getUserId(), addStudentDto.getEmail());
     }
 
 }

@@ -29,6 +29,11 @@ public final class UserController {
         return userService.findById(TokenService.getUserId());
     }
 
+    @GetMapping("/info/{id}")
+    public UserInfoDto getUserInfo(@PathVariable UUID id) {
+        return userService.findById(id);
+    }
+
     @GetMapping("/courses/student/preview")
     public List<CoursePreviewDto> getStudentCoursesPreview() {
         return userService.getCoursesPreview(TokenService.getUserId(), true);

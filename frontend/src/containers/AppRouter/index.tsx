@@ -9,12 +9,15 @@ import { connect } from 'react-redux';
 import HomePage from '@containers/HomePage';
 import { fetchUserInfoRoutine } from '@routines/userRoutines';
 import PrivateRoute from '@containers/PrivateRoute';
+import UserPage from '@containers/UserPage';
 
 interface IRouterProps {
+  userId: string;
   fetchUserInfo: () => any;
 }
 
 const AppRouter: React.FC<IRouterProps> = ({
+  userId,
   fetchUserInfo
 }) => {
   useEffect(() => {
@@ -23,20 +26,25 @@ const AppRouter: React.FC<IRouterProps> = ({
 
   return (
     <Router history={history}>
-      <Header/>
+      <Header userId={userId}/>
       <Switch>
         <Route exact path="/" component={() => <LandingPage/>}/>
         <PrivateRoute exact path="/home" component={HomePage}/>
         <Route exact path="/login" component={() => <AuthForm register={false}/>}/>
         <Route exact path="/signup" component={() => <AuthForm register={true}/>}/>
         <PrivateRoute exact path="/course/:courseId" component={CoursePage}/>
+        <PrivateRoute exact path="/user/:id" component={UserPage}/>
       </Switch>
     </Router>
   );
 };
 
+const mapStateToProps = (state: any) => ({
+  userId: state.auth.id,
+});
+
 const mapDispatchToProps = {
   fetchUserInfo: fetchUserInfoRoutine
 };
 
-export default connect(null, mapDispatchToProps)(AppRouter);
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter);

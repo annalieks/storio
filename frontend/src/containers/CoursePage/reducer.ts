@@ -1,5 +1,11 @@
 import { Routine } from 'redux-saga-routines';
-import { fetchCourseInfoRoutine, fetchPostsRoutine } from '@routines/courseRoutines';
+import {
+  fetchAssignmentsRoutine,
+  fetchCourseInfoRoutine,
+  fetchPostsRoutine,
+  fetchSponsorsRoutine,
+  fetchStudentsRoutine
+} from '@routines/courseRoutines';
 
 const initialState = {
   id: '',
@@ -8,6 +14,7 @@ const initialState = {
   tags: [],
   posts: [],
   assignments: [],
+  sponsors: [],
   students: [],
   teacher: {}
 };
@@ -25,6 +32,24 @@ const courseData = (state = initialState, action: Routine<any>) => {
         ...state,
         posts: action.payload
       };
+    }
+    case fetchStudentsRoutine.SUCCESS: {
+      return {
+        ...state,
+        students: action.payload,
+      };
+    }
+    case fetchSponsorsRoutine.SUCCESS: {
+      return {
+        ...state,
+        sponsors: action.payload,
+      }
+    }
+    case fetchAssignmentsRoutine.SUCCESS: {
+      return {
+        ...state,
+        assignments: action.payload,
+      }
     }
     default:
       return state;
