@@ -45,8 +45,6 @@ const ToDoItem: React.FC<IToDoItemProps> = ({
       
       <div className={styles.edit_delete_controllers}>
         <div className={styles.delete_icon_wrapper} onClick={deleteCallback}><ClearIcon /></div>
-
-        {/* <div className={styles.edit_icon_wrapper}><EditIcon /></div> */}
       </div>
     </div>  
   );

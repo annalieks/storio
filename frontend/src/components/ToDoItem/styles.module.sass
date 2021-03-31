@@ -1,6 +1,5 @@
 @import 'src/styles/variables'
 
-
 .todo_item
   display: flex
   padding: 5px
@@ -26,6 +25,9 @@
   border-bottom: 1px solid $green-color
 
 .todo_item_inner
+  display: flex
+  flex-direction: column
+  justify-content: center
   width: 100%
   padding: 0.5rem
   
@@ -34,9 +36,6 @@
   flex-direction: column
   justify-content: center
   padding: 0rem 0.3rem
-
-.edit-delete-controllers
-
 
 .link
   color: $white-color
@@ -64,11 +63,6 @@ input[type="checkbox"].giant_checkbox
   &:hover::after
     box-shadow: inset 0 0 0 2px $transparent-green-color
     color: $transparent-green-color
-  
-  // &:checked:hover::after
-  //   box-shadow: inset 0 0 0 2px $transparent-green-color
-  //   color: $transparent-green-color
-    
 
   &::after
     content: "\02714"
@@ -92,9 +86,7 @@ input[type="checkbox"].giant_checkbox
     content: "\02714"
     color: $green-color
     box-shadow: inset 0 0 0 2px $green-color
-    
     transition: background-color 350ms 0ms ease, color 350ms 250ms ease, box-shadow 350ms 250ms ease
-
 
 .delete_icon_wrapper
   cursor: pointer
@@ -111,3 +103,7 @@ input[type="checkbox"].giant_checkbox
   border: none
   cursor: default
   color: inherit
+
+.delete_icon_wrapper
+  &:hover
+    color: $transparent-red-color
