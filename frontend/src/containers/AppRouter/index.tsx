@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import HomePage from '@containers/HomePage';
 import { fetchUserInfoRoutine } from '@routines/userRoutines';
 import PrivateRoute from '@containers/PrivateRoute';
+import ToDo from "@containers/ToDo";
 import UserPage from '@containers/UserPage';
 
 interface IRouterProps {
@@ -33,6 +34,7 @@ const AppRouter: React.FC<IRouterProps> = ({
         <Route exact path="/login" component={() => <AuthForm register={false}/>}/>
         <Route exact path="/signup" component={() => <AuthForm register={true}/>}/>
         <PrivateRoute exact path="/course/:courseId" component={CoursePage}/>
+        <PrivateRoute exact path="/todo" component={ToDo} />
         <PrivateRoute exact path="/user/:id" component={UserPage}/>
       </Switch>
     </Router>

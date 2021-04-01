@@ -1,0 +1,39 @@
+@import 'src/styles/variables'
+
+.todo_item
+  display: flex
+  padding: 5px
+  min-height: 2rem
+  transition: border-color 350ms 0ms ease
+
+.todo_text_input
+  font-size: 1rem
+  background-color: transparent
+  outline: none
+  font-family: 'Montserrat', sans-serif
+  border: none
+  color: inherit
+  border-bottom: 1px solid $orange-color
+
+.add_todo_button
+  cursor: pointer
+
+.add_todo_button_wrapper 
+  display: flex
+  flex-direction: column
+  justify-content: center
+  padding: 0rem 0.5rem
+
+.add_todo_icon
+  font-size: 2.5rem
+  color: $gray-color
+  
+  &:hover
+    color: $transparent-orange-color
+
+.add_todo_input_wrapper
+  display: flex
+  flex-direction: column
+  justify-content: center
+  width: 100%
+  padding: 0.5rem
