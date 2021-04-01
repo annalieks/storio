@@ -1,12 +1,15 @@
 import React from 'react';
 import styles from './styles.module.sass';
 import logo from '@assets/logo.png';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AuthorizationBlock } from '@components/Header/AuthorizationBlock';
 import { NavigationBlock } from '@components/Header/NavigationBlock';
-import { Link } from 'react-router-dom';
 
-export const Header: React.FC = () => {
+interface IHeaderProps {
+  userId: string;
+}
+
+export const Header: React.FC<IHeaderProps> = ({ userId }) => {
   const excludedRoutes = ['/login', '/signup'];
   const location = useLocation();
   return !excludedRoutes.includes(location.pathname) ? (
@@ -14,7 +17,9 @@ export const Header: React.FC = () => {
         <Link to="/">
           <img className={styles.logo} src={logo} alt="Storio logo"/>
         </Link>
-        {localStorage.getItem('accessToken') ? <NavigationBlock/> : <AuthorizationBlock/>}
+        {localStorage.getItem('accessToken')
+          ? <NavigationBlock userId={userId}/>
+          : <AuthorizationBlock/>}
       </div>)
     : null;
 };

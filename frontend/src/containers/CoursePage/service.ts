@@ -1,5 +1,6 @@
 import { callApi } from '@root/helpers/api.helper';
 import { PostCreate } from '@models/postData';
+import { AssignmentCreate } from '@models/assignmentData';
 
 export const fetchCourseInfo = async (id: string): Promise<any> => {
   const result = await callApi({
@@ -27,6 +28,15 @@ export const fetchPosts = async (id: string): Promise<any> => {
   return result.json();
 };
 
+export const fetchAssignments = async (id: string): Promise<any> => {
+  const result = await callApi({
+    endpoint: `/course/assignments/${id}`,
+    type: 'GET'
+  });
+
+  return result.json();
+};
+
 export const fetchStudents = async (id: string): Promise<any> => {
   const result = await callApi({
     endpoint: `/course/students/${id}`,
@@ -36,12 +46,30 @@ export const fetchStudents = async (id: string): Promise<any> => {
   return result.json();
 };
 
-export const fetchTeacher = async (id: string): Promise<any> => {
+export const fetchSponsors = async (id: string): Promise<any> => {
   const result = await callApi({
-    endpoint: `/course/teacher/${id}`,
+    endpoint: `/course/sponsors/${id}`,
     type: 'GET'
   });
 
   return result.json();
 };
 
+export const addStudent = async (courseId: string, email: string): Promise<any> => {
+  await callApi({
+    endpoint: '/course/student',
+    type: 'POST',
+    requestData: {
+      courseId,
+      email
+    }
+  });
+};
+
+export const addAssignment = async (data: AssignmentCreate): Promise<any> => {
+  await callApi({
+    endpoint: '/assignment/create',
+    type: 'POST',
+    requestData: data
+  });
+};
