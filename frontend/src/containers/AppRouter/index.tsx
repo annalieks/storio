@@ -10,6 +10,7 @@ import HomePage from '@containers/HomePage';
 import { fetchUserInfoRoutine } from '@routines/userRoutines';
 import PrivateRoute from '@containers/PrivateRoute';
 import UserPage from '@containers/UserPage';
+import CreateCoursePage from '@containers/CreateCoursePage';
 
 interface IRouterProps {
   userId: string;
@@ -34,6 +35,7 @@ const AppRouter: React.FC<IRouterProps> = ({
         <Route exact path="/signup" component={() => <AuthForm register={true}/>}/>
         <PrivateRoute exact path="/course/:courseId" component={CoursePage}/>
         <PrivateRoute exact path="/user/:id" component={UserPage}/>
+        <PrivateRoute exact path="/create/course" component={CreateCoursePage}/>
       </Switch>
     </Router>
   );
