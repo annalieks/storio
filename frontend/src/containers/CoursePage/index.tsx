@@ -71,7 +71,7 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   sponsors,
   fetchSponsors,
   createAssignment,
-  fetchAssignments
+  fetchAssignments,
 }) => {
   const { courseId } = useParams() as { courseId: string };
   const [selected, setSelected] = useState(SelectedMenu.Posts);
@@ -176,7 +176,7 @@ const mapDispatchToProps = {
   fetchStudents: fetchStudentsRoutine,
   fetchSponsors: fetchSponsorsRoutine,
   createAssignment: createAssignmentRoutine,
-  fetchAssignments: fetchAssignmentsRoutine
+  fetchAssignments: fetchAssignmentsRoutine,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage);
