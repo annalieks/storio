@@ -4,6 +4,7 @@ import auth from '@containers/AuthForm/reducer';
 import home from '@containers/HomePage/reducer';
 import course from '@containers/CoursePage/reducer';
 import userPage from '@containers/UserPage/reducer';
+import toDo from '@containers/ToDo/reducer';
 
 export default combineReducers({
   auth,
@@ -11,4 +12,5 @@ export default combineReducers({
   course,
   toastr,
   userPage,
+  toDo
 });

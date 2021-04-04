@@ -1,19 +1,14 @@
 import { callApi } from '@root/helpers/api.helper';
-import { PostCreate } from '@models/postData';
+import { CourseCreateData } from '@models/courseData';
 
-export const fetchCourseInfo = async (id: string): Promise<any> => {
+export const createCourse = async (data: CourseCreateData): Promise<any> => {
   const result = await callApi({
-    endpoint: `/course/info/${id}`,
-    type: 'GET'
+    endpoint: '/course/create',
+    type: 'POST',
+    requestData: {
+      ...data
+    }
   });
 
   return result.json();
-};
-
-export const createPost = async (data: PostCreate): Promise<any> => {
-  await callApi({
-    endpoint: '/post/create',
-    type: 'POST',
-    requestData: data
-  });
 };

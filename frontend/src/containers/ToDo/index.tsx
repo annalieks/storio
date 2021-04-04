@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
-import ReduxToastr from 'react-redux-toastr';
-import { Provider } from 'react-redux';
-import { store } from '@root/store';
-import AppRouter from '@containers/AppRouter';
+import React, { useEffect } from 'react';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import ToDoItem from '@components/ToDoItem';
 import styles from './styles.module.sass';
 import AddToDo from '@components/AddToDo';
+import { ToDoPreview } from '@models/toDoData';
+import { fetchUserToDosRoutine } from '@routines/userRoutines';
+import { addToDoRoutine, changeToDoRoutine, deleteToDoRoutine } from '@routines/toDoRoutines';
+import { connect } from 'react-redux';
+import { PieChart } from 'react-minimal-pie-chart';
 
-const App: React.FC = () => {
+interface IToDoProps {
+  todos: ToDoPreview[];
+  fetchToDos: () => any;
+  addToDo: (text: string) => any;
+  deleteToDo: (id: string) => any;
+  changeToDo: (todo: ToDoPreview) => any;
+}
 
-  // TODO: use redux
-  const [todos, setTodos] = useState([
-    {
-      id: '1',
-      text: 'walk a dog',
-      done: false
-    }
-  ]);
+const ToDo: React.FC<IToDoProps> = ({
+  todos,
+  fetchToDos,
+  addToDo,
+  deleteToDo,
+  changeToDo
+}) => {
+  useEffect(() => {
+    fetchToDos();
+  }, []);
+  const doneNumber = todos.reduce((total, elem) =>
+    (elem.done ? total + 1 : total), 0);
 
   return (<div className={styles.todo_content}>
       <h2 className={styles.todo_header}>
@@ -25,38 +36,53 @@ const App: React.FC = () => {
       </h2>
       <div className={styles.todo_list}>
         <div className={styles.add_todo_wrapper}>
-          <AddToDo addCallback={(text: string) => {
-            const newTodo = {
-              id: text+'1221',
-              text,
-              done: false
-            };
-            setTodos([newTodo, ...todos]);
-          }}/>
+          <AddToDo addCallback={(text: string) => addToDo(text)}/>
         </div>
         {
-          todos.map((todo, index) => (
-            <div className={styles.todo_item_wrapper}>
-              <ToDoItem 
-                id={todo.id}
-                key={todo.id}
-                text={todo.text}
-                done={todo.done}
-                changeCallback={(val) => {
-                  const newTodos = todos.map((todo, i) => i == index ? val : todo);
-                  setTodos(newTodos);
-                }}
-                deleteCallback={() => {
-                  const newTodos = todos.filter((todo, i) => i !== index);
-                  setTodos(newTodos);
-                }}
-              />
-            </div>
-          ))
+          [...todos].reverse()
+            .map((todo) => (
+              <div className={styles.todo_item_wrapper}>
+                <ToDoItem
+                  id={todo.id}
+                  key={todo.id}
+                  text={todo.text}
+                  done={todo.done}
+                  changeCallback={(toDo) => changeToDo(toDo)}
+                  deleteCallback={(id) => deleteToDo(id)}
+                />
+              </div>
+            ))
         }
       </div>
+      <div className={styles.chart_container}>
+        <PieChart
+          data={[
+            {
+              title: 'Done',
+              value: doneNumber,
+              color: '#4AB37A'
+            },
+            {
+              title: 'Not Done',
+              value: todos.length - doneNumber,
+              color: '#F8A353'
+            }
+          ]}
+        />
+      </div>
     </div>
-  )
+  );
 };
 
-export default App;
+const mapStateToProps = (state: any) => ({
+  todos: state.toDo.todos
+});
+
+const mapDispatchToProps = {
+  fetchToDos: fetchUserToDosRoutine,
+  addToDo: addToDoRoutine,
+  deleteToDo: deleteToDoRoutine,
+  changeToDo: changeToDoRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDo);

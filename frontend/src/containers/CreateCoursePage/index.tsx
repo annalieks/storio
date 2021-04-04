@@ -8,6 +8,10 @@ import Tag from '@components/Tag';
 import AddIcon from '@material-ui/icons/Add';
 import { SponsorShortInfo } from '@models/sponsorData';
 import SponsorCard from '@components/SponsorCard';
+import GradientButton from '@components/GradientButton';
+import { createCourseRoutine } from '@routines/courseRoutines';
+import { CourseCreateData } from '@models/courseData';
+import { history } from '@helpers/history.helper';
 
 const theme = createMuiTheme({
   palette: {
@@ -15,7 +19,11 @@ const theme = createMuiTheme({
   }
 });
 
-const CreateCoursePage: React.FC = () => {
+interface ICreateCoursePageProps {
+  addCourse: (data: CourseCreateData) => any;
+}
+
+const CreateCoursePage: React.FC<ICreateCoursePageProps> = ({ addCourse }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState<{ tagsArr: string[] }>({ tagsArr: [] });
@@ -24,10 +32,27 @@ const CreateCoursePage: React.FC = () => {
   const [sponsorName, setSponsorName] = useState('');
   const [sponsorDesc, setSponsorDesc] = useState('');
 
+  const handleSubmit = () => {
+    if (!name)
+      return;
+
+    addCourse({
+      name,
+      description,
+      tags: tags.tagsArr,
+      sponsors: sponsors.sponsArr
+    });
+
+    history.push('/');
+  };
+
   return (
     <div className={styles.course_container}>
       <ThemeProvider theme={theme}>
         <div className={styles.main_info}>
+          <div className={styles.image_container}>
+            <img src={lampImage} alt="lamp"/>
+          </div>
           <div className={styles.input_container}>
             <TextField
               label="Name"
@@ -49,86 +74,89 @@ const CreateCoursePage: React.FC = () => {
                 className: styles.input
               }}
             />
-            <div className={styles.add_container}>
-              <p>Tags:</p>
-              <div className={styles.existing_tags}>
-                {tags.tagsArr.map(t => <Tag text={t}/>)}
+            <GradientButton text="Create Course" onClick={() => handleSubmit()}/>
+          </div>
+        </div>
+        <div className={styles.additional_info}>
+          <div className={styles.tags_container}>
+            <p>Tags:</p>
+            <TextField
+              label="Your tag"
+              value={tag}
+              variant="outlined"
+              onChange={(e) => setTag(e.target.value)}
+              InputLabelProps={{
+                className: styles.input
+              }}
+            />
+            <button
+              className={styles.add_tag_button}
+              onClick={() => {
+                const t = tag.trim();
+                if (!t) {
+                  return;
+                }
+                setTags({
+                  tagsArr: [...tags.tagsArr, t]
+                });
+                setTag('');
+              }}
+            >
+              <AddIcon/>
+            </button>
+            <div className={styles.existing_tags}>
+              {tags.tagsArr.map(t => <Tag text={t}/>)}
+            </div>
+          </div>
+          <div className={styles.sponsors_container}>
+            <p>Sponsors:</p>
+            <div className={styles.sponsors_list_container}>
+              <div>
+                <TextField
+                  label="Name"
+                  value={sponsorName}
+                  variant="outlined"
+                  onChange={(e) => setSponsorName(e.target.value)}
+                  InputLabelProps={{
+                    className: styles.input
+                  }}
+                />
+                <TextField
+                  label="Description"
+                  value={sponsorDesc}
+                  multiline
+                  rows={5}
+                  variant="outlined"
+                  onChange={(e) => setSponsorDesc(e.target.value)}
+                  InputLabelProps={{
+                    className: styles.input
+                  }}
+                />
               </div>
-              <TextField
-                label="Your tag"
-                value={tag}
-                variant="outlined"
-                onChange={(e) => setTag(e.target.value)}
-                InputLabelProps={{
-                  className: styles.input
-                }}
-              />
               <button
                 className={styles.add_tag_button}
                 onClick={() => {
-                  const t = tag.trim();
-                  if (!t) {
+                  const n = sponsorName.trim();
+                  const d = sponsorDesc.trim();
+                  if (!n) {
                     return;
                   }
-                  setTags({
-                    tagsArr: [...tags.tagsArr, t]
+                  setSponsors({
+                    sponsArr: [...sponsors.sponsArr, {
+                      name: n,
+                      description: d
+                    }]
                   });
-                  setTag('');
+                  setSponsorName('');
+                  setSponsorDesc('');
                 }}
               >
                 <AddIcon/>
               </button>
             </div>
-            <div className={styles.add_container}>
-              <p>Sponsors:</p>
-              <div className={styles.existing_sponsors}>
-                {sponsors.sponsArr.map(s => <SponsorCard name={s.name} description={s.description}/>)}
-              </div>
-              <div className={styles.sponsors_container}>
-                <div>
-                  <TextField
-                    label="Name"
-                    value={sponsorName}
-                    variant="outlined"
-                    onChange={(e) => setSponsorName(e.target.value)}
-                    InputLabelProps={{
-                      className: styles.input
-                    }}
-                  />
-                  <TextField
-                    label="Description"
-                    value={sponsorDesc}
-                    multiline
-                    rows={5}
-                    variant="outlined"
-                    onChange={(e) => setSponsorDesc(e.target.value)}
-                    InputLabelProps={{
-                      className: styles.input
-                    }}
-                  />
-                </div>
-                <button
-                  className={styles.add_tag_button}
-                  onClick={() => {
-                    const n = sponsorName.trim();
-                    const d = sponsorDesc.trim();
-                    if (!n) {
-                      return;
-                    }
-                    setSponsors({
-                      sponsArr: [...sponsors.sponsArr, {name: n, description: d}]
-                    });
-                    setSponsorName('');
-                    setSponsorDesc('');
-                  }}
-                >
-                  <AddIcon/>
-                </button>
-              </div>
-            </div>
           </div>
-          <div className={styles.image_container}>
-            <img src={lampImage} alt="lamp"/>
+          <div className={styles.existing_sponsors}>
+            {sponsors.sponsArr.map(s => <SponsorCard name={s.name} description={s.description}/>)}
           </div>
         </div>
       </ThemeProvider>
@@ -136,8 +164,8 @@ const CreateCoursePage: React.FC = () => {
   );
 };
 
-const mapStateToProps = (state: any) => ({});
+const mapDispatchToProps = {
+  addCourse: createCourseRoutine
+};
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateCoursePage);
+export default connect(null, mapDispatchToProps)(CreateCoursePage);

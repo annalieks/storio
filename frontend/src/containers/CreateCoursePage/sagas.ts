@@ -1,24 +1,23 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import * as service from './service';
-import { fetchCourseInfoRoutine } from '@routines/courseRoutines';
+import { createCourseRoutine } from '@routines/courseRoutines';
 import { AnyAction } from 'redux';
-import { CourseInfo } from '@models/courseData';
 
-function* fetchCourseInfo({ payload }: AnyAction) {
+function* addCourse({ payload }: AnyAction) {
   try {
-    const response: CourseInfo = yield call(() => service.fetchCourseInfo(payload));
-    yield put(fetchCourseInfoRoutine.success(response));
+    yield call(() => service.createCourse(payload));
+    yield put(createCourseRoutine.success());
   } catch (error) {
-    yield put(fetchCourseInfoRoutine.failure(error.message));
+    yield put(createCourseRoutine.failure(error.message));
   }
 }
 
-function* watchFetchCourseInfo() {
-  yield takeEvery(fetchCourseInfoRoutine.TRIGGER, fetchCourseInfo);
+function* watchAddCourse() {
+  yield takeEvery(createCourseRoutine.TRIGGER, addCourse);
 }
 
-export default function* authSagas() {
+export default function* createCourseSagas() {
   yield all([
-    watchFetchCourseInfo()
+    watchAddCourse()
   ]);
 }

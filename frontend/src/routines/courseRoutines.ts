@@ -5,6 +5,8 @@ import { ShortUserInfo } from '@models/userData';
 import { SponsorPreview } from '@models/sponsorData';
 import { AssignmentPreview } from '@models/assignmentData';
 
+export const createCourseRoutine = createRoutine('COURSE:CREATE');
+
 export const fetchStudentCoursesRoutine = createRoutine('COURSES:STUDENT:FETCH_PREVIEW');
 
 export const fetchTeacherCoursesRoutine = createRoutine('COURSES:TEACHER:FETCH_PREVIEW');
