@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import lampImage from '@assets/course.jpg';
 import styles from './styles.module.sass';
 import {
-  addStudentRoutine, fetchAssignmentsRoutine,
+  addStudentRoutine,
+  fetchAssignmentsRoutine,
   fetchCourseInfoRoutine,
   fetchPostsRoutine,
   fetchSponsorsRoutine,
@@ -143,7 +144,7 @@ const CoursePage: React.FC<ICoursePageProps> = ({
         </>}
         {selected === SelectedMenu.People &&
         <>
-          <StudentsForm courseId={id} onSubmit={addStudent}/>
+          {currentUserId === teacher.id && <StudentsForm courseId={id} onSubmit={addStudent}/>}
           <PeopleBlock students={students} teacher={teacher}/>
         </>
         }

@@ -1,6 +1,7 @@
 package com.backend.storio.controller;
 
 import com.backend.storio.dto.CoursePreviewDto;
+import com.backend.storio.dto.ToDoDto;
 import com.backend.storio.dto.UserInfoDto;
 import com.backend.storio.service.TokenService;
 import com.backend.storio.service.UserService;
@@ -42,6 +43,11 @@ public final class UserController {
     @GetMapping("/courses/teacher/preview")
     public List<CoursePreviewDto> getTeacherCoursesPreview() {
         return userService.getCoursesPreview(TokenService.getUserId(), false);
+    }
+
+    @GetMapping("/todos")
+    public List<ToDoDto> getToDos() {
+        return userService.getUserToDos();
     }
 
 }

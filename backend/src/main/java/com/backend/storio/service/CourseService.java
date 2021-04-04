@@ -179,7 +179,7 @@ public class CourseService {
      */
     public void createCourse(final CourseCreateDto courseDto) {
         var course = CourseMapper.MAPPER.courseCreateDtoToCourse(courseDto);
-        var user = userRepository.findUserById(courseDto.getUserId());
+        var user = userRepository.findUserById(TokenService.getUserId());
         if (user.isEmpty()) {
             throw new EntityNotFoundException("No creator with such user id was found");
         }

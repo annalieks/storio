@@ -3,3 +3,8 @@ export interface SponsorPreview {
   name: string;
   description: string;
 }
+
+export interface SponsorShortInfo {
+  name: string;
+  description: string;
+}

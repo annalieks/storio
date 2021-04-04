@@ -1,12 +1,11 @@
 package com.backend.storio.service;
 
 import com.backend.storio.dao.User;
-import com.backend.storio.dto.AuthUserDto;
-import com.backend.storio.dto.CoursePreviewDto;
-import com.backend.storio.dto.UserDetailsDto;
-import com.backend.storio.dto.UserInfoDto;
+import com.backend.storio.dto.*;
 import com.backend.storio.exception.EntityNotFoundException;
+import com.backend.storio.mapper.ToDoMapper;
 import com.backend.storio.mapper.UserMapper;
+import com.backend.storio.repository.ToDoRepository;
 import com.backend.storio.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,9 +22,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    private final ToDoRepository toDoRepository;
+
     @Autowired
-    public UserService(final UserRepository userRepository) {
+    public UserService(final UserRepository userRepository,
+                       final ToDoRepository toDoRepository) {
         this.userRepository = userRepository;
+        this.toDoRepository = toDoRepository;
     }
 
     public void createUser(User user) {
@@ -53,6 +56,18 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id)
                 .map(UserMapper.MAPPER::userToUserDetailsDto)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found with such email"));
+    }
+
+    /**
+     * Get all user todos
+     *
+     * @return List of user todos
+     */
+    public List<ToDoDto> getUserToDos() {
+        return toDoRepository.findAllByAuthorIdOrderByCreatedAt(TokenService.getUserId())
+                .stream()
+                .map(ToDoMapper.MAPPER::toDoToDto)
+                .collect(Collectors.toList());
     }
 
     /**

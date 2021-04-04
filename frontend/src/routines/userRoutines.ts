@@ -11,3 +11,5 @@ export const loginRoutine = createRoutine('USER:LOGIN',
 
 export const signupRoutine = createRoutine('USER:SIGNUP',
   (data: RegisterData) => data);
+
+export const fetchUserToDosRoutine = createRoutine('USER:TODOS');
