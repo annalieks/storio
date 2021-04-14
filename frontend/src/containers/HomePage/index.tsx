@@ -7,7 +7,7 @@ import CoursesBlock from '@components/CoursesBlock';
 import GradientButton from '@components/GradientButton';
 import { fetchStudentCoursesRoutine, fetchTeacherCoursesRoutine } from '@routines/courseRoutines';
 import { fetchUserInfoRoutine } from '@routines/userRoutines';
-import { fetchUserInfo } from '@containers/AuthForm/service';
+import Statistics from '@components/Statistics';
 
 interface IHomePageProps {
   userId: string;
@@ -24,13 +24,16 @@ const HomePage: React.FC<IHomePageProps> = ({
   teacherCourses,
   fetchStudentCourses,
   fetchTeacherCourses,
-  fetchUserInfo,
+  fetchUserInfo
 }) => {
   useEffect(() => {
     fetchUserInfo();
     fetchStudentCourses(userId);
     fetchTeacherCourses(userId);
   }, []);
+  const studentsOnStudentCourses = () => studentCourses.reduce((a, b) => a + b.studentsNum, 0);
+  const studentsOnTeacherCourses = () => teacherCourses.reduce((a, b) => a + b.studentsNum, 0);
+
   return (
     <div className={styles.home_container}>
       <div className={styles.controls_container}>
@@ -38,6 +41,20 @@ const HomePage: React.FC<IHomePageProps> = ({
       </div>
       <CoursesBlock header="Student courses" courses={studentCourses}/>
       <CoursesBlock header="Author courses" courses={teacherCourses}/>
+      <Statistics
+        one={studentCourses.length}
+        oneText={'Student Courses'}
+        two={teacherCourses.length}
+        twoText={'Teacher Courses'}
+        colorOne={'#F8A353'}
+        colorTwo={'#4C4C4C'}
+      />
+      <Statistics
+        one={studentsOnStudentCourses()}
+        oneText={'Students on student courses'}
+        two={studentsOnTeacherCourses()}
+        twoText={'Students on teacher courses'}
+      />
     </div>
   );
 };
@@ -51,7 +68,7 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = {
   fetchStudentCourses: fetchStudentCoursesRoutine,
   fetchTeacherCourses: fetchTeacherCoursesRoutine,
-  fetchUserInfo: fetchUserInfoRoutine,
+  fetchUserInfo: fetchUserInfoRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

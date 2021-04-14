@@ -24,12 +24,14 @@ import PeopleBlock from '@components/PeopleBlock';
 import { SponsorPreview } from '@models/sponsorData';
 import SponsorCard from '@components/SponsorCard';
 import { createAssignmentRoutine } from '@routines/assignmentRoutines';
+import Statistics from '@components/Statistics';
 
 enum SelectedMenu {
   Posts,
   Assignments,
   People,
   Sponsors,
+  Statistics,
 }
 
 interface ICoursePageProps {
@@ -71,7 +73,7 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   sponsors,
   fetchSponsors,
   createAssignment,
-  fetchAssignments,
+  fetchAssignments
 }) => {
   const { courseId } = useParams() as { courseId: string };
   const [selected, setSelected] = useState(SelectedMenu.Posts);
@@ -87,11 +89,19 @@ const CoursePage: React.FC<ICoursePageProps> = ({
   }, {
     text: 'Sponsors',
     onClick: () => setSelected(SelectedMenu.Sponsors)
+  }, {
+    text: 'Statistics',
+    onClick: () => setSelected(SelectedMenu.Statistics)
   }];
+
+  const userPostsNum = posts.reduce((num, p) =>
+    num + (p.author.id === currentUserId ? 1 : 0) , 0)
 
   useEffect(() => {
     if (courseId) {
       fetchCourseInfo(courseId);
+      fetchPosts(courseId);
+      fetchAssignments(courseId);
     }
     if (selected === SelectedMenu.Posts) {
       fetchPosts(courseId);
@@ -150,6 +160,11 @@ const CoursePage: React.FC<ICoursePageProps> = ({
         }
         {selected === SelectedMenu.Sponsors
         && sponsors.map(s => <SponsorCard name={s.name} description={s.description}/>)}
+        {selected === SelectedMenu.Statistics
+        && <>
+        <Statistics one={posts.length} two={assignments.length} oneText={'Posts'} twoText={'Assignments'}/>
+        <Statistics one={userPostsNum} oneText={'My posts'} two={posts.length - userPostsNum} twoText={'Other posts'}/>
+        </>}
       </div>
     </div>
   );
@@ -176,7 +191,7 @@ const mapDispatchToProps = {
   fetchStudents: fetchStudentsRoutine,
   fetchSponsors: fetchSponsorsRoutine,
   createAssignment: createAssignmentRoutine,
-  fetchAssignments: fetchAssignmentsRoutine,
+  fetchAssignments: fetchAssignmentsRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage);

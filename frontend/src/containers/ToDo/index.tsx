@@ -30,6 +30,10 @@ const ToDo: React.FC<IToDoProps> = ({
   const doneNumber = todos.reduce((total, elem) =>
     (elem.done ? total + 1 : total), 0);
 
+  const defaultLabelStyle = {
+    fontSize: '0.7em',
+  };
+
   return (<div className={styles.todo_content}>
       <h2 className={styles.todo_header}>
         Your ToDo list
@@ -56,6 +60,8 @@ const ToDo: React.FC<IToDoProps> = ({
       </div>
       <div className={styles.chart_container}>
         <PieChart
+          label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
+          labelStyle={defaultLabelStyle}
           data={[
             {
               title: 'Done',
